@@ -126,27 +126,36 @@ var Level = function() {
     }
 };
 
+let showPopup = function() {
+    $(".popup").css("opacity", 0.5);
+    setTimeout(function() {
+        $(".popup").css("opacity", 0);
+    }, 1500);
+};
+
 Level.prototype.up = function() {
     this.level++;
     if (this.numberOfEnemies < 7) { // if 16 enemies, don't add
         this.numberOfEnemies++;
 
-        $(".popup").css("opacity", 0.5);
-        setTimeout(function() {
-            $(".popup").css("opacity", 0);
-        }, 1500);
+        // $(".popup").css("opacity", 0.5);
+        // setTimeout(function() {
+        //     $(".popup").css("opacity", 0);
+        // }, 1500);
+        showPopup();
 
     } else {
         console.log('so now, level up the speeds!');
 
         $(".popup div").html('Now, the bugs are getting faster!!');
-        $(".popup").css("opacity", 0.5);
-        setTimeout(function() {
-            $(".popup").css("opacity", 0);
-        }, 1500);
+        // $(".popup").css("opacity", 0.5);
+        // setTimeout(function() {
+        //     $(".popup").css("opacity", 0);
+        // }, 1500);
+        showPopup();
 
         for (enemy of allEnemies) {
-            enemy.acceleration(50);
+            enemy.acceleration(20);
             console.log('see the changed speeds: ', enemy.speed);
         }
     }

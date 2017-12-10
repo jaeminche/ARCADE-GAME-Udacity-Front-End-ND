@@ -10,7 +10,7 @@ var Enemy = function() {
     let acceleration = 0;
     this.x = initPosX;
     this.y = initPosY[Math.floor(Math.random() * initPosY.length)];
-    this.speed = Math.floor(Math.random() * 400) + 50;
+    this.speed = Math.floor(Math.random() * 150) + 50;
     this.sprite = 'images/enemy-bug.png';
     this.reposition = function() {
         this.x = initPosX;
@@ -18,7 +18,7 @@ var Enemy = function() {
     };
     this.acceleration = function(accelerate) {
         acceleration += accelerate;
-        this.speed = Math.floor(Math.random() * (400 + acceleration)) + 50;
+        this.speed = Math.floor(Math.random() * (150 + acceleration)) + 50;
     }
 
 };
@@ -43,7 +43,6 @@ Enemy.prototype.update = function(dt) {
        30 + player.y > this.y) {
         player.x = 3 * 101;
         player.y = 574;
-
     }
 };
 
@@ -131,18 +130,29 @@ Level.prototype.up = function() {
     this.level++;
     if (this.numberOfEnemies < 7) { // if 16 enemies, don't add
         this.numberOfEnemies++;
+
+        $(".popup").css("opacity", 0.5);
+        setTimeout(function() {
+            $(".popup").css("opacity", 0);
+        }, 1500);
+
     } else {
         console.log('so now, level up the speeds!');
+
+        $(".popup div").html('Now, the bugs are getting faster!!');
+        $(".popup").css("opacity", 0.5);
+        setTimeout(function() {
+            $(".popup").css("opacity", 0);
+        }, 1500);
+
         for (enemy of allEnemies) {
             enemy.acceleration(50);
             console.log('see the changed speeds: ', enemy.speed);
         }
     }
-
-    // $(".averageSpeed").html(enemy.speed);
-
     console.log('level.up called');
-}
+};
+
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -155,6 +165,8 @@ level.enemyGenerator();
 
 const player = new Player();
 level.display();
+
+
 
 
 

@@ -1,3 +1,90 @@
+html {
+	background-color: black;
+	margin: auto;
+}
+
 body {
     text-align: center;
+    color: white;
+    font-family: 'Press Start 2P', cursive;
+}
+
+#logo {
+	background: url(../images/frogger-logo.png);
+	background-repeat: no-repeat;
+    background-position: center;
+    padding: 2.5em;
+    background-size: 20em;
+}
+
+.flex-container {
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	padding: 1em;
+}
+
+.stat-num {
+	color: yellow;
+}
+
+.level-block {
+	color: red;
+}
+
+canvas {
+	margin-top: -3em;
+}
+
+
+
+
+
+
+@import url(https://fonts.googleapis.com/css?family=Indie+Flower);
+
+.popup{
+  position:fixed;
+  left:50vw;
+  margin-left:35px;
+  top:50vh;
+  margin-top:-210px;
+  opacity:0;
+  transition:all 1s;
+  -webkit-transition:all 1s;
+}
+
+
+.popup div
+{
+  width:120px;
+  font-size:20px;
+  font-family: 'Indie Flower', cursive;
+}
+
+.popup div
+{
+  padding:50px;
+  background-color:black;
+  border-radius:40px;
+  color:white;
+  text-align:center;
+}
+
+
+/* Gestion des évenements */
+
+/*.button:hover ~.popup
+{
+  margin-left:45px;
+  margin-top:-220px;
+  opacity:1;
+}*/
+
+.yellow {
+	color: yellow;
+}
+
+.red {
+	color: red;
 }

@@ -18,6 +18,11 @@ var Engine = (function(global) {
      * create the canvas element, grab the 2D context for that canvas
      * set the canvas elements height/width and add it to the DOM.
      */
+    var scale = 'scale(1)';
+    document.body.style.webkitTransform =  scale;    // Chrome, Opera, Safari
+    document.body.style.msTransform =   scale;       // IE 9
+    document.body.style.transform = scale;     // General
+
     var doc = global.document,
         win = global.window,
         canvas = doc.createElement('canvas'),
@@ -27,6 +32,8 @@ var Engine = (function(global) {
     canvas.width = 808;
     canvas.height = 757; // 707
     doc.body.appendChild(canvas);
+    $('.flex-container').css("max-width", canvas.width);
+    $('.flex-container').css("margin", "auto");
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.

@@ -67,9 +67,6 @@ Player.prototype.update = function(dt) {
         this.x = 3 * 101;
         this.y = 574;
         level.up();
-
-        // umMove.html(parseInt(numMove.html()) + 1);
-
     }
     if (this.y > 574) {
         this.y -= 83;
@@ -111,12 +108,11 @@ var Level = function() {
             allEnemies.push(enemy);
             console.log(this.numberOfEnemies);
         }
-    }
+    };
 };
 
 Level.prototype.up = function() {
     this.level++;
-    // console.log(document.getElementsByClassName("level").html());
     if (this.numberOfEnemies < 7) { // if 16 enemies, don't add
         this.numberOfEnemies++;
     } else {
@@ -127,6 +123,7 @@ Level.prototype.up = function() {
             console.log('enemy.reposition(50) called: ', enemy.speed);
         }
     }
+    $(".level").html(this.level);
 
     console.log('level.up called');
     console.log('numberOfEnemies: ', this.numberOfEnemies);

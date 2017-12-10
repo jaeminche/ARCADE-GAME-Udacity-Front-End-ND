@@ -67,6 +67,7 @@ Player.prototype.update = function(dt) {
         this.x = 3 * 101;
         this.y = 574;
         level.up();
+        level.display();
     }
     if (this.y > 574) {
         this.y -= 83;
@@ -106,9 +107,24 @@ var Level = function() {
         while (allEnemies.length < this.numberOfEnemies) {
             const enemy = new Enemy();
             allEnemies.push(enemy);
-            console.log(this.numberOfEnemies);
+            console.log('numberOfEnemies: ', this.numberOfEnemies);
+            this.display();
         }
     };
+    this.display = function() {
+        $(".level").html(this.level);
+        $(".numBugs").html(this.numberOfEnemies);
+
+        const enemiesSpeeds = [];
+        for (enemy of allEnemies) {
+            enemiesSpeeds.push(enemy.speed);
+            console.log('enemiesSpeeds: ', enemiesSpeeds);
+        }
+        function getMaxSpeed(numArray) {
+            return Math.max.apply(null, numArray);
+        }
+        $(".highestSpeed").html(getMaxSpeed(enemiesSpeeds));
+    }
 };
 
 Level.prototype.up = function() {
@@ -116,17 +132,16 @@ Level.prototype.up = function() {
     if (this.numberOfEnemies < 7) { // if 16 enemies, don't add
         this.numberOfEnemies++;
     } else {
-        console.log('over 5 enemies called');
-        console.log('numberOfEnemies: ', this.numberOfEnemies);
+        console.log('so now, level up the speeds!');
         for (enemy of allEnemies) {
             enemy.acceleration(50);
-            console.log('enemy.reposition(50) called: ', enemy.speed);
+            console.log('see the changed speeds: ', enemy.speed);
         }
     }
-    $(".level").html(this.level);
+
+    // $(".averageSpeed").html(enemy.speed);
 
     console.log('level.up called');
-    console.log('numberOfEnemies: ', this.numberOfEnemies);
 }
 
 // Now instantiate your objects.
@@ -137,8 +152,9 @@ Level.prototype.up = function() {
 const allEnemies = [];
 const level = new Level();
 level.enemyGenerator();
-const player = new Player();
 
+const player = new Player();
+level.display();
 
 
 

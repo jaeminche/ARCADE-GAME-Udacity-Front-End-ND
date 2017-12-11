@@ -61,8 +61,6 @@ var Player = function() {
     this.boundary = {x: 5, y: 5, width: 50, height: 50}
 };
 
-let gemPocket = 0;
-
 Player.prototype.update = function(dt) {
     // if player reaches the water, set her on the default position
     if (this.y < 0) {
@@ -70,6 +68,7 @@ Player.prototype.update = function(dt) {
         this.y = 574;
         level.up();
         level.display();
+        // rock.hide();
     }
     if (this.y > 574) {
         this.y -= 83;
@@ -99,18 +98,17 @@ Player.prototype.handleInput = function(pressedKey) {
             break;
         case 'right':
             player.x += 101;
+            break;
     }
 
     if (gemPocket > 0) {
         switch(pressedKey) {
             case 'spacebar':
-                rock.generate();
-                gemPocket--;
+                // const rock = new Rock();
+                rock.plant();
         }
     }
-
 };
-
 
 var Gem = function() {
     const initPosX = [0, 101, 202, 303, 404, 505, 606, 707];
@@ -132,6 +130,7 @@ Gem.prototype.update = function() {
        30 + player.y > this.y) {
         gemPocket++;
         this.hide();
+        // allRocks.
     }
 };
 
@@ -144,12 +143,14 @@ var Rock = function() {
     this.hide = function() {
         rock.x = undefined;
     };
+    this.plant = function() {
+        this.x = player.x - 101;
+        this.y = player.y;
+        if (gemPocket > 0) {
+            gemPocket--;
+        };
+    };
 };
-
-Rock.prototype.generate = function() {
-    this.x = player.x - 101;
-    this.y = player.y;
-}
 
 Rock.prototype.update = function() {
     // Detect an encounter, and make entities get by it
@@ -187,6 +188,7 @@ ShowPopup.prototype.tip_1 = function() {
 var Level = function() {
     this.level = 1;
     this.numberOfEnemies = 2;
+    // rock.hide();
     this.enemyGenerator = function() { // generates as many enemies as preset in the Level object
         while (allEnemies.length < this.numberOfEnemies) {
             const enemy = new Enemy();
@@ -195,6 +197,11 @@ var Level = function() {
             this.display();
         }
     };
+    // this.createRockObj = function() {
+    //     if (gemPocket.length > 0) {
+    //         const rock = new Rock();
+    //     }
+    // }
     this.display = function() {
         $(".level").html(this.level);
         $(".numBugs").html(this.numberOfEnemies);
@@ -244,7 +251,8 @@ Level.prototype.up = function() {
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
-
+let gemPocket = 0;
+const allRocks = [];
 const allEnemies = [];
 const level = new Level();
 level.enemyGenerator();
@@ -253,7 +261,7 @@ const player = new Player();
 level.display();
 const showPopup = new ShowPopup();
 let gem = new Gem();
-const rock = new Rock();
+let rock = new Rock();
 
 
 

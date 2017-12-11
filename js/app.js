@@ -70,6 +70,12 @@ Player.prototype.update = function(dt) {
         this.y = 574;
         level.up();
         level.display();
+        console.log('allRocks.length: ', allRocks.length);
+        console.log('gempocket called: ', gemPocket);
+        let numOfRocksToBeDeleted = allRocks.length - 1;
+        for (let i = 0; i < numOfRocksToBeDeleted; i ++) {
+            allRocks.pop();
+        }
         // rock.hide();
     }
     if (this.y > 574) {
@@ -103,17 +109,21 @@ Player.prototype.handleInput = function(pressedKey) {
             break;
     }
 
-    if (gemPocket > 0) {
-        switch(pressedKey) {
-            case 'spacebar':
-                for (rock of allRocks) {
-                    rock.plant();
-                    // allRocks.shift();
-                    console.log('spacebar pressed');
-                    break;
-                }
-        }
+    if (pressedKey === 'spacebar' && gemPocket > 0) {
+        allRocks[gemPocket].plant();
+        console.log('gempocket called: ', gemPocket);
+
     }
+
+        // switch(pressedKey) {
+        //     case 'spacebar':
+        //         for (var i = 0; i < allRocks.length; i++) {
+        //             allRocks[i].plant();
+        //             // allRocks.shift();
+        //             console.log('spacebar pressed');
+        //             break;
+        //         }
+        // }
 };
 
 var Gem = function() {
@@ -136,7 +146,7 @@ Gem.prototype.update = function() {
        30 + player.y > this.y) {
         gemPocket++;
         this.hide();
-        // allRocks.
+        level.rockGenerator();
     }
 };
 
@@ -209,9 +219,10 @@ var Level = function() {
     };
 
     this.rockGenerator = function() {
-        while (allRocks.length <= gemPocket) {
+        while (allRocks.length - 1 < gemPocket) {
             const rock = new Rock();
             allRocks.push(rock);
+            console.log('level.rockGenerator generated');
         }
     };
 

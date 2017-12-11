@@ -61,6 +61,8 @@ var Player = function() {
     this.boundary = {x: 5, y: 5, width: 50, height: 50}
 };
 
+let gemPocket = 0;
+
 Player.prototype.update = function(dt) {
     // if player reaches the water, set her on the default position
     if (this.y < 0) {
@@ -99,9 +101,17 @@ Player.prototype.handleInput = function(pressedKey) {
             player.x += 101;
     }
 
+    if (gemPocket > 0) {
+        switch(pressedKey) {
+            case 'spacebar':
+                rock.generate();
+                gemPocket--;
+        }
+    }
+
 };
 
-let gemPocket = 0;
+
 var Gem = function() {
     const initPosX = [0, 101, 202, 303, 404, 505, 606, 707];
     const initPosY = [62, 145, 229, 312, 395];
@@ -128,6 +138,31 @@ Gem.prototype.update = function() {
 Gem.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
+
+var Rock = function() {
+    this.sprite = 'images/rock.png';
+    this.hide = function() {
+        rock.x = undefined;
+    };
+};
+
+Rock.prototype.generate = function() {
+    this.x = player.x - 101;
+    this.y = player.y;
+}
+
+Rock.prototype.update = function() {
+    // Detect an encounter, and make entities get by it
+    // if (player.x < this.x + 80 &&
+    //    player.x + 70 > this.x &&
+    //    player.y < this.y + 25 &&
+    //    30 + player.y > this.y) {
+    //     player.x
+};
+
+Rock.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+}
 
 var ShowPopup = function() {
     this.string = 'LOOK OUT! There comes <span class="yellow">one more bug!</span>';
@@ -218,7 +253,7 @@ const player = new Player();
 level.display();
 const showPopup = new ShowPopup();
 let gem = new Gem();
-
+const rock = new Rock();
 
 
 

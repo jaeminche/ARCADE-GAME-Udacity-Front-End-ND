@@ -34,7 +34,9 @@ Enemy.prototype.update = function(dt) {
     if (this.x > 800) {
         this.reposition(0);
     }
+
     level.enemyGenerator();
+
 
     // Detect collision, and set the player at the default position
     if (player.x < this.x + 80 &&
@@ -104,8 +106,12 @@ Player.prototype.handleInput = function(pressedKey) {
     if (gemPocket > 0) {
         switch(pressedKey) {
             case 'spacebar':
-                // const rock = new Rock();
-                rock.plant();
+                for (rock of allRocks) {
+                    rock.plant();
+                    // allRocks.shift();
+                    console.log('spacebar pressed');
+                    break;
+                }
         }
     }
 };
@@ -139,20 +145,24 @@ Gem.prototype.render = function() {
 };
 
 var Rock = function() {
+    this.x = - 101;
+    this.y = - 100;
     this.sprite = 'images/rock.png';
-    this.hide = function() {
-        rock.x = undefined;
-    };
-    this.plant = function() {
-        this.x = player.x - 101;
-        this.y = player.y;
-        if (gemPocket > 0) {
-            gemPocket--;
-        };
-    };
+    // this.hide = function() {
+    //     rock.x = undefined;
+    // };
+};
+
+Rock.prototype.plant = function() {
+    this.x = player.x - 101;
+    this.y = player.y;
+    if (gemPocket > 0) {
+        gemPocket--;
+    }
 };
 
 Rock.prototype.update = function() {
+    level.rockGenerator();
     // Detect an encounter, and make entities get by it
     // if (player.x < this.x + 80 &&
     //    player.x + 70 > this.x &&
@@ -197,11 +207,14 @@ var Level = function() {
             this.display();
         }
     };
-    // this.createRockObj = function() {
-    //     if (gemPocket.length > 0) {
-    //         const rock = new Rock();
-    //     }
-    // }
+
+    this.rockGenerator = function() {
+        while (allRocks.length <= gemPocket) {
+            const rock = new Rock();
+            allRocks.push(rock);
+        }
+    };
+
     this.display = function() {
         $(".level").html(this.level);
         $(".numBugs").html(this.numberOfEnemies);
@@ -256,7 +269,7 @@ const allRocks = [];
 const allEnemies = [];
 const level = new Level();
 level.enemyGenerator();
-
+level.rockGenerator();
 const player = new Player();
 level.display();
 const showPopup = new ShowPopup();

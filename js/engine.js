@@ -18,10 +18,6 @@ var Engine = (function(global) {
      * create the canvas element, grab the 2D context for that canvas
      * set the canvas elements height/width and add it to the DOM.
      */
-    var scale = 'scale(1)';
-    document.body.style.webkitTransform =  scale;    // Chrome, Opera, Safari
-    document.body.style.msTransform =   scale;       // IE 9
-    document.body.style.transform = scale;     // General
 
     var doc = global.document,
         win = global.window,
@@ -30,7 +26,7 @@ var Engine = (function(global) {
         lastTime;
 
     canvas.width = 808;
-    canvas.height = 757; // 707
+    canvas.height = 757;
     doc.body.appendChild(canvas);
     $('.flex-container').css("max-width", canvas.width);
     $('.flex-container').css("margin", "auto");
@@ -101,6 +97,7 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
+        gem.update();
     }
 
     /* This function initially draws the "game level", it will then call
@@ -163,6 +160,7 @@ var Engine = (function(global) {
         });
 
         player.render();
+        gem.render();
     }
 
     /* This function does nothing but it could have been a good place to
@@ -182,7 +180,9 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/gem-orange.png',
+        'images/rock.png'
     ]);
     Resources.onReady(init);
 

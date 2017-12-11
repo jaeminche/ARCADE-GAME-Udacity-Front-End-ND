@@ -8,6 +8,7 @@ var Enemy = function() {
     const initPosX = -120;
     const initPosY = [62, 145, 229, 312, 395];
     let acceleration = 0;
+    this.boundary = {x: 5, y: 5, width: 50, height: 50};
     this.x = initPosX;
     this.y = initPosY[Math.floor(Math.random() * initPosY.length)];
     this.speed = Math.floor(Math.random() * 150) + 50;
@@ -59,8 +60,8 @@ Enemy.prototype.render = function() {
 var Player = function() {
     this.sprite = 'images/char-boy.png';
     this.x = 3 * 101;
-    this.y = 574 // 7 * 82;
-    this.boundary = {x: 5, y: 5, width: 50, height: 50}
+    this.y = 574; // 7 * 82;
+    this.boundary = {x: 5, y: 5, width: 50, height: 50};
 };
 
 Player.prototype.update = function(dt) {
@@ -114,16 +115,6 @@ Player.prototype.handleInput = function(pressedKey) {
         console.log('gempocket called: ', gemPocket);
 
     }
-
-        // switch(pressedKey) {
-        //     case 'spacebar':
-        //         for (var i = 0; i < allRocks.length; i++) {
-        //             allRocks[i].plant();
-        //             // allRocks.shift();
-        //             console.log('spacebar pressed');
-        //             break;
-        //         }
-        // }
 };
 
 var Gem = function() {
@@ -158,6 +149,8 @@ var Rock = function() {
     this.x = - 101;
     this.y = - 100;
     this.sprite = 'images/rock.png';
+    this.boundary = {x: 5, y: 5, width: 50, height: 50}
+    this.detected = 0;
     // this.hide = function() {
     //     rock.x = undefined;
     // };
@@ -174,11 +167,20 @@ Rock.prototype.plant = function() {
 Rock.prototype.update = function() {
     level.rockGenerator();
     // Detect an encounter, and make entities get by it
-    // if (player.x < this.x + 80 &&
-    //    player.x + 70 > this.x &&
-    //    player.y < this.y + 25 &&
-    //    30 + player.y > this.y) {
-    //     player.x
+    for (enemy of allEnemies) {
+        if (enemy.x < this.x + 80 &&
+           enemy.x + 70 > this.x &&
+           enemy.y < this.y + 25 &&
+           30 + enemy.y > this.y) {
+            enemy.y = enemy.y + 83;
+            console.log('detected');
+            this.detected++;
+            if (this.detected === 2) {
+                this.x = -100;
+            }
+        }
+    }
+
 };
 
 Rock.prototype.render = function() {

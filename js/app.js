@@ -8,7 +8,6 @@ var Enemy = function() {
     const initPosX = -120;
     const initPosY = [62, 145, 229, 312, 395];
     let acceleration = 0;
-    this.boundary = {x: 5, y: 5, width: 50, height: 50};
     this.x = initPosX;
     this.y = initPosY[Math.floor(Math.random() * initPosY.length)];
     this.speed = Math.floor(Math.random() * 150) + 50;
@@ -207,8 +206,8 @@ Rock.prototype.render = function() {
 var Popup = function() {
     this.string = '';
     this.show = function() {
-        $(".popup div").css("width", "200px");
-        $(".popup div").css("font-size", "25px");
+        $(".popup div").css("width", "8em"); // 200
+        $(".popup div").css("font-size", "1.5em");  // 25
         $(".popup div").html(this.string);
         $(".popup").css("opacity", 0.7);
         setTimeout(function() {
@@ -216,8 +215,8 @@ var Popup = function() {
         }, 2500);
     };
     this.show_welcome = function() {
-        $(".popup div").css("width", "250px");
-        $(".popup div").css("font-size", "30px");
+        $(".popup div").css("width", "9em"); // 250
+        $(".popup div").css("font-size", "1.8em"); // 30
         $(".popup div").html(this.string);
         $(".popup").css("opacity", 0.8);
         $(document).keyup(function(e) {
@@ -231,8 +230,10 @@ var Popup = function() {
         });
     };
     this.show_gameover = function() {
-        $(".popup div").css("width", "250px");
-        $(".popup div").css("font-size", "45px");
+        $(".popup").css("left", "30vw");
+        $(".popup div").css("width", "9em"); // 250
+        $(".popup div").css("height", "4em");
+        $(".popup div").css("font-size", "4em"); // 45
         $(".popup div").html(this.string);
         $(".popup").css("opacity", 0.8);
         $('html').bind('keyup', function(e) {
@@ -245,6 +246,7 @@ var Popup = function() {
                 return false;
             } else if (e.keyCode == 13) {
                 $(".popup").css("opacity", 0);
+                location.reload();
             }
         });
     };
@@ -256,7 +258,7 @@ Popup.prototype.tip_welcome = function() {
 };
 
 Popup.prototype.tip_more_bug = function() {
-    this.string = 'LOOK OUT! There comes <span class="yellow">one more bug!</span>';
+    this.string = 'LOOK OUT! <span class="red">ONE MORE BUG</span> is coming!!';
 };
 
 Popup.prototype.tip_faster_speed = function() {
@@ -267,10 +269,10 @@ Popup.prototype.tip_spacebar = function() {
     this.string = 'Tip : Get <span class="yellow">GEMS</span>, and press <span class="red">SPACEBAR</span> to block the bugs!';
 };
 Popup.prototype.tip_rocks = function() {
-    this.string = 'Tip : Rocks block <span class="red">two bugs</span>! Sometimes some can do more!';
+    this.string = 'Tip : Rocks can block <span class="red">two bugs!</span> Sometimes some can do more!';
 };
 Popup.prototype.gameover = function() {
-    this.string = '- GAMEOVER -';
+    this.string = '<span class="red">- GAMEOVER -</span> \n Press <span class="yellow">ENTER</span> to play again!';
 };
 
 var Level = function() {

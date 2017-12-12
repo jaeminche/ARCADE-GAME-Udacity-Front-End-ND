@@ -174,7 +174,20 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        // noop
+        // gemPocket = 0;
+        // highestSpeed = 0;
+        // allRocks = [];
+        // allEnemies = [];
+        // level = new Level();
+        // level.enemyGenerator();
+        // level.rockGenerator();
+        // player = new Player();
+        // level.display();
+        // popup = new Popup();
+        // gem = new Gem();
+        // rock = new Rock();
+        // popup.tip_welcome();
+        // popup.show_welcome();
     }
 
     /* Go ahead and load all of the images we know we're going to need to

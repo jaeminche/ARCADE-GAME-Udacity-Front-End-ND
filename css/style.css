@@ -66,7 +66,7 @@ canvas {
 
 @import url(https://fonts.googleapis.com/css?family=Indie+Flower);
 
-.popup{
+.popup {
   position:fixed;
   left:50vw;
   margin-left:35px;
@@ -78,15 +78,13 @@ canvas {
 }
 
 
-.popup div
-{
+.popup div {
   width:200px;
   font-size:20px;
   font-family: 'Indie Flower', cursive;
 }
 
-.popup div
-{
+.popup div {
   padding:50px;
   background-color:black;
   border-radius:40px;

@@ -187,30 +187,57 @@ Rock.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 }
 
-var ShowPopup = function() {
-    this.string = 'LOOK OUT! There comes <span class="yellow">one more bug!</span>';
+var Popup = function() {
+    this.string = '';
     this.show = function() {
+        $(".popup div").css("width", "200px");
+        $(".popup div").css("font-size", "25px");
         $(".popup div").html(this.string);
-        $(".popup").css("opacity", 0.5);
+        $(".popup").css("opacity", 0.7);
         setTimeout(function() {
             $(".popup").css("opacity", 0);
-        }, 1500);
+        }, 2500);
     };
+    this.show_welcome = function() {
+    $(".popup div").css("width", "250px");
+    $(".popup div").css("font-size", "30px");
+    $(".popup div").html(this.string);
+    $(".popup").css("opacity", 0.8);
+    $(document).keyup(function(e) {
+        if (e.keyCode == 32 ||
+            e.keyCode == 37 ||
+            e.keyCode == 38 ||
+            e.keyCode == 39 ||
+            e.keyCode == 40) {
+            $(".popup").css("opacity", 0);
+        }
+    });
 };
 
-ShowPopup.prototype.from_level_6 = function() {
-    this.string = 'Now, the bugs are getting <span class="red">faster!!</span>';
+
+Popup.prototype.tip_welcome = function() {
+    this.string = 'INSTRUCTIONS: Get to the water using <span class="red">ARROW KEYS</span>, Get some <span class="yellow">GEMS</span>, and Block the bugs using <span class="red">SPACEBAR</span>!!';
+    }
 };
 
-ShowPopup.prototype.tip_1 = function() {
-    this.string = 'Tip : Press SPACEBAR to block the bugs!';
+Popup.prototype.tip_more_bug = function() {
+    this.string = 'LOOK OUT! There comes <span class="yellow">one more bug!</span>';
 };
 
+Popup.prototype.tip_faster_speed = function() {
+    this.string = 'Now, THEY are getting <span class="red">FASTER!!</span>';
+};
+
+Popup.prototype.tip_spacebar = function() {
+    this.string = 'Tip : Get <span class="yellow">GEMS</span>, and press <span class="red">SPACEBAR</span> to block the bugs!';
+};
+Popup.prototype.tip_rocks = function() {
+    this.string = 'Tip : A rock blocks <span class="red">two bugs</span>!';
+};
 
 var Level = function() {
     this.level = 1;
     this.numberOfEnemies = 2;
-    // rock.hide();
     this.enemyGenerator = function() { // generates as many enemies as preset in the Level object
         while (allEnemies.length < this.numberOfEnemies) {
             const enemy = new Enemy();
@@ -249,25 +276,26 @@ Level.prototype.up = function() {
     gem = new Gem();
     if (this.numberOfEnemies < 7) { // only if under 7 enemies, add an enemy
         this.numberOfEnemies++;
-        showPopup.show();
-
     } else { // if over 7 enemies, accelerate enemies's speed
-        console.log('so now, level up the speeds!');
-        if (this.level % 3 == 0) {
-            showPopup.tip_1();
-            showPopup.show();
-        } else {
-            showPopup.from_level_6();
-            showPopup.show();
-        }
-
-
         for (enemy of allEnemies) {
             enemy.acceleration(20);
-            console.log('see the changed speeds: ', enemy.speed);
         }
     }
-    console.log('level.up called');
+
+    switch (true) {
+        case this.level % 3 == 0:
+            popup.tip_spacebar();
+            break;
+        case this.level < 7:
+            popup.tip_more_bug();
+            break;
+        case this.level % 5 == 0:
+            popup.tip_rocks();
+            break;
+        default:
+            popup.tip_faster_speed();
+    }
+    popup.show();
 };
 
 
@@ -285,9 +313,11 @@ level.enemyGenerator();
 level.rockGenerator();
 const player = new Player();
 level.display();
-const showPopup = new ShowPopup();
+const popup = new Popup();
 let gem = new Gem();
 let rock = new Rock();
+popup.tip_welcome();
+popup.show_welcome();
 
 
 
@@ -300,8 +330,15 @@ document.addEventListener('keyup', function(e) {
         38: 'up',
         39: 'right',
         40: 'down',
-        32: 'spacebar'
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
+document.addEventListener('keydown', function(e) {
+    var allowedKeys1 = {
+        32: 'spacebar'
+    };
+
+    player.handleInput(allowedKeys1[e.keyCode]);
+})

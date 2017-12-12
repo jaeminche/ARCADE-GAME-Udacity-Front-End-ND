@@ -44,6 +44,7 @@ Enemy.prototype.update = function(dt) {
        player.x + 70 > this.x &&
        player.y < this.y + 25 &&
        30 + player.y > this.y) {
+        gemPocket--;
         player.x = 3 * 101;
         player.y = 574;
     }
@@ -61,7 +62,8 @@ var Player = function() {
     this.sprite = 'images/char-boy.png';
     this.x = 3 * 101;
     this.y = 574; // 7 * 82;
-    this.boundary = {x: 5, y: 5, width: 50, height: 50};
+    this.previousX = 0;
+    this.previousY = 0;
 };
 
 Player.prototype.update = function(dt) {
@@ -77,8 +79,9 @@ Player.prototype.update = function(dt) {
         for (let i = 0; i < numOfRocksToBeDeleted; i ++) {
             allRocks.pop();
         }
-        // rock.hide();
     }
+
+    // set the player's move in the boundary of the canvas
     if (this.y > 574) {
         this.y -= 83;
     }
@@ -98,15 +101,19 @@ Player.prototype.handleInput = function(pressedKey) {
     switch(pressedKey) {
         case 'up':
             player.y -= 83;
+            player.previousY = -83;
             break;
         case 'down':
             player.y += 83;
+            player.previousY = 83;
             break;
         case 'left':
             player.x -= 101;
+            player.previousX = -101;
             break;
         case 'right':
             player.x += 101;
+            player.previousX = 101;
             break;
     }
 
@@ -150,7 +157,6 @@ var Rock = function() {
     this.x = - 101;
     this.y = - 100;
     this.sprite = 'images/rock.png';
-    this.boundary = {x: 5, y: 5, width: 50, height: 50}
     this.detected = 0;
 };
 
@@ -177,6 +183,27 @@ Rock.prototype.update = function() {
                 this.x = -100;
             }
         }
+    }
+
+    if (player.x < this.x + 80 &&
+       player.x + 70 > this.x &&
+       player.y < this.y + 25 &&
+       30 + player.y > this.y) {
+        player.x = player.x - player.previousX;
+        player.y = player.y - player.previousY;
+        // if (player.x < this.x + 10) {
+        //     console.log('1st detected');
+        //     player.x += 101;
+        // } else if (player.x + 70 > this.x) {
+        //     console.log('2st detected');
+        //     player.x -= 101;
+        // } else if (player.y < this.y + 25) {
+        //     console.log('3st detected');
+        //     player.y += 83;
+        // } else if (30 + player.y > this.y) {
+        //     console.log('4st detected');
+        //     player.y -= 83;
+        // }
     }
 
 };
@@ -214,7 +241,7 @@ var Popup = function() {
 
 
 Popup.prototype.tip_welcome = function() {
-    this.string = 'INSTRUCTIONS: Get to the water using <span class="red">ARROW KEYS</span>, Get some <span class="yellow">GEMS</span>, and Block the bugs using <span class="red">SPACEBAR</span>!!';
+    this.string = 'INSTRUCTIONS: Get some <span class="yellow">GEMS</span>, Block the bugs using <span class="red">SPACEBAR</span>, and Get to the water using <span class="red">ARROW KEYS</span> to win!!';
     }
 };
 
@@ -343,6 +370,7 @@ document.addEventListener('keydown', function(e) {
     var allowedKeys1 = {
         32: 'spacebar'
     };
-
+    player.previousX = 0;
+    player.previousY = 0;
     player.handleInput(allowedKeys1[e.keyCode]);
 })

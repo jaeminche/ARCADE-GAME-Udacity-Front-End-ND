@@ -130,7 +130,7 @@ var Gem = function() {
 };
 
 Gem.prototype.update = function() {
-    // Detect a get, and hide the gem and unable future get
+    // Detect a get, hide the gem, generate rock object, and display the no. of earned rocks
     if (player.x < this.x + 80 &&
        player.x + 70 > this.x &&
        player.y < this.y + 25 &&
@@ -139,6 +139,7 @@ Gem.prototype.update = function() {
         this.hide();
         level.rockGenerator();
     }
+    $(".num-rock").html(gemPocket);
 };
 
 Gem.prototype.render = function() {
@@ -151,9 +152,6 @@ var Rock = function() {
     this.sprite = 'images/rock.png';
     this.boundary = {x: 5, y: 5, width: 50, height: 50}
     this.detected = 0;
-    // this.hide = function() {
-    //     rock.x = undefined;
-    // };
 };
 
 Rock.prototype.plant = function() {
@@ -232,12 +230,13 @@ Popup.prototype.tip_spacebar = function() {
     this.string = 'Tip : Get <span class="yellow">GEMS</span>, and press <span class="red">SPACEBAR</span> to block the bugs!';
 };
 Popup.prototype.tip_rocks = function() {
-    this.string = 'Tip : A rock blocks <span class="red">two bugs</span>!';
+    this.string = 'Tip : Rocks block <span class="red">two bugs</span>! Sometimes some can do more!';
 };
 
 var Level = function() {
     this.level = 1;
     this.numberOfEnemies = 2;
+    this.score = 0;
     this.enemyGenerator = function() { // generates as many enemies as preset in the Level object
         while (allEnemies.length < this.numberOfEnemies) {
             const enemy = new Enemy();
@@ -267,30 +266,34 @@ var Level = function() {
         function getMaxSpeed(numArray) {
             return Math.max.apply(null, numArray);
         }
-        $(".highestSpeed").html(getMaxSpeed(enemiesSpeeds));
+        highestSpeed = getMaxSpeed(enemiesSpeeds);
+        $(".highestSpeed").html(highestSpeed);
+        // $(".num-rock").html(gemPocket);
     }
 };
 
 Level.prototype.up = function() {
     this.level++;
+    this.score += this.numberOfEnemies * highestSpeed;
+    $(".score").html(this.score);
     gem = new Gem();
     if (this.numberOfEnemies < 7) { // only if under 7 enemies, add an enemy
         this.numberOfEnemies++;
     } else { // if over 7 enemies, accelerate enemies's speed
         for (enemy of allEnemies) {
-            enemy.acceleration(20);
+            enemy.acceleration(40);
         }
     }
 
     switch (true) {
+        case this.level % 5 == 0:
+            popup.tip_rocks();
+            break;
         case this.level % 3 == 0:
             popup.tip_spacebar();
             break;
         case this.level < 7:
             popup.tip_more_bug();
-            break;
-        case this.level % 5 == 0:
-            popup.tip_rocks();
             break;
         default:
             popup.tip_faster_speed();
@@ -306,6 +309,7 @@ Level.prototype.up = function() {
 // Place the player object in a variable called player
 
 let gemPocket = 0;
+let highestSpeed = 0;
 const allRocks = [];
 const allEnemies = [];
 const level = new Level();

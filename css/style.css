@@ -12,17 +12,40 @@ body {
 #logo {
 	background: url(../images/frogger-logo.png);
 	background-repeat: no-repeat;
-    background-position: center;
-    padding: 2.5em;
-    background-size: 20em;
+  background-position: center;
+  padding: 2.5em;
+  background-size: 20em;
+}
+
+.stat-container {
+  margin-top: 1.5em;
 }
 
 .flex-container {
 	display: flex;
 	justify-content: space-between;
 	flex-wrap: wrap;
-	padding: 1em;
+	padding: 0.5em;
 }
+
+.bug-image {
+  background: url('../images/enemy-bug.png');
+}
+
+.rock-image {
+  background: url('../images/rock.png');
+}
+
+.bug-image,
+.rock-image {
+  background-repeat: no-repeat;
+  background-position: center;
+  padding: 2.5em;
+  background-size: 2.5em;
+  background-position: right 1em bottom 1.5em;
+}
+
+
 
 .stat-num {
 	color: yellow;

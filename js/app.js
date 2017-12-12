@@ -20,7 +20,7 @@ var Enemy = function() {
     this.acceleration = function(accelerate) {
         acceleration += accelerate;
         this.speed = Math.floor(Math.random() * (150 + acceleration)) + 50;
-    }
+    };
 };
 
 // Update the enemy's position, required method for game
@@ -47,6 +47,13 @@ Enemy.prototype.update = function(dt) {
         gemPocket--;
         player.x = 3 * 101;
         player.y = 574;
+
+        if (gemPocket === -1) {
+            popup.gameover();
+            popup.show_gameover();
+        }
+
+
     }
 };
 
@@ -73,8 +80,6 @@ Player.prototype.update = function(dt) {
         this.y = 574;
         level.up();
         level.display();
-        console.log('allRocks.length: ', allRocks.length);
-        console.log('gempocket called: ', gemPocket);
         let numOfRocksToBeDeleted = allRocks.length - 1;
         for (let i = 0; i < numOfRocksToBeDeleted; i ++) {
             allRocks.pop();
@@ -115,12 +120,13 @@ Player.prototype.handleInput = function(pressedKey) {
             player.x += 101;
             player.previousX = 101;
             break;
+        case 'enter':
+            break;
+
     }
 
     if (pressedKey === 'spacebar' && gemPocket > 0) {
         allRocks[gemPocket].plant();
-        console.log('gempocket called: ', gemPocket);
-
     }
 };
 
@@ -132,7 +138,6 @@ var Gem = function() {
     this.sprite = 'images/gem-orange.png';
     this.hide = function() {
         gem.x = undefined;
-        console.log('gempocket called: ', gemPocket);
     };
 };
 
@@ -165,6 +170,7 @@ Rock.prototype.plant = function() {
     this.y = player.y;
     if (gemPocket > 0) {
         gemPocket--;
+
     }
 };
 
@@ -177,7 +183,6 @@ Rock.prototype.update = function() {
            enemy.y < this.y + 25 &&
            30 + enemy.y > this.y) {
             enemy.y = enemy.y + 83;
-            console.log('detected');
             this.detected++;
             if (this.detected === 2) {
                 this.x = -100;
@@ -191,26 +196,13 @@ Rock.prototype.update = function() {
        30 + player.y > this.y) {
         player.x = player.x - player.previousX;
         player.y = player.y - player.previousY;
-        // if (player.x < this.x + 10) {
-        //     console.log('1st detected');
-        //     player.x += 101;
-        // } else if (player.x + 70 > this.x) {
-        //     console.log('2st detected');
-        //     player.x -= 101;
-        // } else if (player.y < this.y + 25) {
-        //     console.log('3st detected');
-        //     player.y += 83;
-        // } else if (30 + player.y > this.y) {
-        //     console.log('4st detected');
-        //     player.y -= 83;
-        // }
     }
 
 };
 
 Rock.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-}
+};
 
 var Popup = function() {
     this.string = '';
@@ -224,25 +216,43 @@ var Popup = function() {
         }, 2500);
     };
     this.show_welcome = function() {
-    $(".popup div").css("width", "250px");
-    $(".popup div").css("font-size", "30px");
-    $(".popup div").html(this.string);
-    $(".popup").css("opacity", 0.8);
-    $(document).keyup(function(e) {
-        if (e.keyCode == 32 ||
-            e.keyCode == 37 ||
-            e.keyCode == 38 ||
-            e.keyCode == 39 ||
-            e.keyCode == 40) {
-            $(".popup").css("opacity", 0);
-        }
-    });
-};
+        $(".popup div").css("width", "250px");
+        $(".popup div").css("font-size", "30px");
+        $(".popup div").html(this.string);
+        $(".popup").css("opacity", 0.8);
+        $(document).keyup(function(e) {
+            if (e.keyCode == 32 ||
+                e.keyCode == 37 ||
+                e.keyCode == 38 ||
+                e.keyCode == 39 ||
+                e.keyCode == 40) {
+                $(".popup").css("opacity", 0);
+            }
+        });
+    };
+    this.show_gameover = function() {
+        $(".popup div").css("width", "250px");
+        $(".popup div").css("font-size", "45px");
+        $(".popup div").html(this.string);
+        $(".popup").css("opacity", 0.8);
+        $('html').bind('keyup', function(e) {
+            if (e.keyCode == 32 ||
+                e.keyCode == 37 ||
+                e.keyCode == 38 ||
+                e.keyCode == 39 ||
+                e.keyCode == 40) {
+                e.preventDefault();
+                return false;
+            } else if (e.keyCode == 13) {
+                $(".popup").css("opacity", 0);
+            }
+        });
+    };
 
+};
 
 Popup.prototype.tip_welcome = function() {
     this.string = 'INSTRUCTIONS: Get some <span class="yellow">GEMS</span>, Block the bugs using <span class="red">SPACEBAR</span>, and Get to the water using <span class="red">ARROW KEYS</span> to win!!';
-    }
 };
 
 Popup.prototype.tip_more_bug = function() {
@@ -258,6 +268,9 @@ Popup.prototype.tip_spacebar = function() {
 };
 Popup.prototype.tip_rocks = function() {
     this.string = 'Tip : Rocks block <span class="red">two bugs</span>! Sometimes some can do more!';
+};
+Popup.prototype.gameover = function() {
+    this.string = '- GAMEOVER -';
 };
 
 var Level = function() {
@@ -295,8 +308,7 @@ var Level = function() {
         }
         highestSpeed = getMaxSpeed(enemiesSpeeds);
         $(".highestSpeed").html(highestSpeed);
-        // $(".num-rock").html(gemPocket);
-    }
+    };
 };
 
 Level.prototype.up = function() {
@@ -361,6 +373,7 @@ document.addEventListener('keyup', function(e) {
         38: 'up',
         39: 'right',
         40: 'down',
+        13: 'enter'
     };
 
     player.handleInput(allowedKeys[e.keyCode]);
@@ -373,4 +386,4 @@ document.addEventListener('keydown', function(e) {
     player.previousX = 0;
     player.previousY = 0;
     player.handleInput(allowedKeys1[e.keyCode]);
-})
+});

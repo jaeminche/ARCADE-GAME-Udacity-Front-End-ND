@@ -64,8 +64,8 @@ canvas {
 
 
 
-@import url(https://fonts.googleapis.com/css?family=Indie+Flower);
-
+/*@import url(https://fonts.googleapis.com/css?family=Indie+Flower);
+*/
 .popup {
   position:fixed;
   left:50vw;

@@ -269,7 +269,7 @@ Popup.prototype.tip_spacebar = function() {
     this.string = 'Tip : Get <span class="yellow">GEMS</span>, and press <span class="red">SPACEBAR</span> to block the bugs!';
 };
 Popup.prototype.tip_rocks = function() {
-    this.string = 'Tip : Rocks can block <span class="red">two bugs!</span> Sometimes some can do more!';
+    this.string = 'Tip : <span class="yellow">Rocks</span> can block <span class="red">two bugs!</span> Sometimes some can do more!';
 };
 Popup.prototype.gameover = function() {
     this.string = '<span class="red">- GAMEOVER -</span> \n Press <span class="yellow">ENTER</span> to play again!';

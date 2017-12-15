@@ -104,15 +104,17 @@ Player.prototype.update = function(dt) {
     // If player wins(reaches the water),
     // set it on the default position, and set the level up
     if (this.y < 0) {
+        // Detect t
+        for (rock of allRocksTemp) {
+            if (rock.planted === true) {
+                let index = allRocksTemp.indexOf(rock);
+                allRocksTemp.splice(index, 1);
+            }
+        }
         this.x = 3 * 101;
         this.y = 574;
         level.up();
         level.display();
-        // Detect t
-        let numOfRocksToBeDeleted = allRocksTemp.length - 1;
-        for (let i = 0; i < numOfRocksToBeDeleted; i ++) {
-            allRocksTemp.splice(0, 1);
-        }
     }
 
     // set the player's move in the boundary of the canvas
@@ -155,7 +157,9 @@ Player.prototype.handleInput = function(pressedKey) {
     }
 
     if (pressedKey === 'spacebar' && gemPocket > 0) {
-        allRocksTemp[gemPocket].plant();
+        console.log('allrockstemp: ', allRocksTemp);
+        console.log('allrockstemp.[gempocket -1 ]: ', allRocksTemp[gemPocket - 1]);
+        allRocksTemp[gemPocket - 1].plant();
     }
 };
 
@@ -171,13 +175,14 @@ var Gem = function() {
 };
 
 Gem.prototype.update = function() {
-    // Detect a get, hide the gem, generate rock object, and display the no. of earned rocks
+    // Detect a get, hide it, generate a rock object, and display the no. of earned rocks
     if (player.x < this.x + 80 &&
        player.x + 70 > this.x &&
        player.y < this.y + 25 &&
        30 + player.y > this.y) {
         gemPocket++;
         this.hide();
+        // console.log("level.rockGenerator(); detected");
         level.rockGenerator();
     }
     $(".num-rock").html(gemPocket);
@@ -192,19 +197,20 @@ var Rock = function() {
     this.y = - 100;
     this.sprite = 'images/rock.png';
     this.detected = 0;
+    this.planted = false;
 };
 
 Rock.prototype.plant = function() {
     this.x = player.x - 101;
     this.y = player.y;
-    if (gemPocket > 0) {
-        gemPocket--;
-
-    }
+    this.planted = true;
+    // if (gemPocket > 0) {
+    gemPocket--;
+    // }
 };
 
 Rock.prototype.update = function() {
-    level.rockGenerator();
+    // level.rockGenerator();
     // Detect an encounter, and make entities get by it
     for (enemy of allEnemies) {
         if (enemy.x < this.x + 80 &&
@@ -320,11 +326,11 @@ var Level = function() {
     };
 
     this.rockGenerator = function() {
-        while (allRocksTemp.length - 1 < gemPocket) {
-            const rock = new Rock();
-            allRocksTemp.push(rock);
-            console.log('level.rockGenerator generated');
-        }
+        // while (allRocksTemp.length - 1 < gemPocket) {
+        const rock = new Rock();
+        allRocksTemp.push(rock);
+        console.log('level.rockGenerator generated');
+        // }
     };
 
     this.display = function() {
@@ -382,11 +388,11 @@ Level.prototype.up = function() {
 
 let gemPocket = 0;
 let highestSpeed = 0;
-const allRocksTemp = [];
 const allEnemies = [];
 const level = new Level();
 level.enemyGenerator();
-level.rockGenerator();
+const allRocksTemp = [];
+// level.rockGenerator();
 const player = new Player();
 level.display();
 const popup = new Popup();

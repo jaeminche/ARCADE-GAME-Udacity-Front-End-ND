@@ -8,6 +8,7 @@
 // - Make it device-responsive, especially with touchable control
 // - Add leader board
 // - Add pause button
+// - Add a combo bonus for three-serial gems collected
 
 
 /**
@@ -58,7 +59,7 @@ Enemy.prototype.update = function(dt) {
         this.reposition(0);
     }
     // Call enemy instance generation function, which
-    // will detect conditions that generate another enemy instance,
+    // will detect conditions under which another enemy instance gets generated,
     // for instance : level-up followed by player's win
     level.enemyGenerator();
 
@@ -132,20 +133,17 @@ Player.prototype.update = function() {
     }
 };
 
-
-
-
-
-
-
-
-
-
-
+/**
+ * Draw the player on the canvas
+ */
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+/**
+ * Handle the up, down, left, and right keyboard arrow keys to move players,
+ * enter, and spacebar keys
+ */
 Player.prototype.handleInput = function(pressedKey) {
     switch(pressedKey) {
         case 'up':
@@ -166,16 +164,17 @@ Player.prototype.handleInput = function(pressedKey) {
             break;
         case 'enter':
             break;
-
     }
-
+    // If the player has more than one gem, pressing spacebar plants a rock instance
     if (pressedKey === 'spacebar' && gemPocket > 0) {
-        console.log('allrockstemp: ', allRocksTemp);
-        console.log('allrockstemp.[gempocket -1 ]: ', allRocksTemp[gemPocket - 1]);
         allRocksTemp[gemPocket - 1].plant();
     }
 };
 
+/**
+ * Generate a gem at a random position and can hide it
+ * @class
+ */
 var Gem = function() {
     const initPosX = [0, 101, 202, 303, 404, 505, 606, 707];
     const initPosY = [62, 145, 229, 312, 395];
@@ -187,24 +186,36 @@ var Gem = function() {
     };
 };
 
+/**
+ * Update the gem's appearance depending on its being collected
+ */
 Gem.prototype.update = function() {
-    // Detect a get, hide it, generate a rock object, and display the no. of earned rocks
+    // How many gems the player collects is the number of rocks she/he can plant
+    // Detect a gem collected, then add a gem in the gemPocket,
+    // hide it from the canvas, and generate a rock object
     if (player.x < this.x + 80 &&
        player.x + 70 > this.x &&
        player.y < this.y + 25 &&
        30 + player.y > this.y) {
         gemPocket++;
         this.hide();
-        // console.log("level.rockGenerator(); detected");
         level.rockGenerator();
     }
+    // Display the no. of earned rocks
     $(".num-rock").html(gemPocket);
 };
 
+/**
+ * Draw the gem on the canvas
+ */
 Gem.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+/**
+ * Generate a rock off the canvas, the default position
+ * @class
+ */
 var Rock = function() {
     this.x = - 101;
     this.y = - 100;
@@ -213,32 +224,38 @@ var Rock = function() {
     this.planted = false;
 };
 
+/**
+ * Plant a rock on the left spot of the player
+ */
 Rock.prototype.plant = function() {
     this.x = player.x - 101;
     this.y = player.y;
+    // Give the rock a 'true' for planted's boolean value
     this.planted = true;
-    // if (gemPocket > 0) {
+    // A rock planted, a gem paid for it; subtract one from the gemPocket
     gemPocket--;
-    // }
 };
 
+/**
+ * Detect approach of entities, and make them get by it
+ */
 Rock.prototype.update = function() {
-    // level.rockGenerator();
-    // Detect an encounter, and make entities get by it
+    // Detect collision with enemies, and slide the enemies down
     for (enemy of allEnemies) {
         if (enemy.x < this.x + 80 &&
            enemy.x + 70 > this.x &&
            enemy.y < this.y + 25 &&
            30 + enemy.y > this.y) {
             enemy.y = enemy.y + 83;
+            // if collided twice, set the rock off the canvas (it gets disappeared)
             this.detected++;
             if (this.detected === 2) {
                 this.x = -100;
-                // allRocksTemp.splice(this, 1);
             }
         }
     }
 
+    // Detect the player getting by, and make it unpenetratable
     if (player.x < this.x + 80 &&
        player.x + 70 > this.x &&
        player.y < this.y + 25 &&
@@ -249,26 +266,35 @@ Rock.prototype.update = function() {
 
 };
 
+/**
+ * Draw the rock on the canvas
+ */
 Rock.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+/**
+ * Generate pop-ups
+ * @class
+ */
 var Popup = function() {
     this.string = '';
     this.show = function() {
-        $(".popup div").css("width", "8em"); // 200
-        $(".popup div").css("font-size", "1.5em");  // 25
+        $(".popup div").css("width", "8em");
+        $(".popup div").css("font-size", "1.5em");
         $(".popup div").html(this.string);
         $(".popup").css("opacity", 0.7);
+        // After 2.5 sec, pop-ups disappear automatically
         setTimeout(function() {
             $(".popup").css("opacity", 0);
         }, 2500);
     };
     this.show_welcome = function() {
-        $(".popup div").css("width", "9em"); // 250
-        $(".popup div").css("font-size", "1.8em"); // 30
+        $(".popup div").css("width", "9em");
+        $(".popup div").css("font-size", "1.8em");
         $(".popup div").html(this.string);
         $(".popup").css("opacity", 0.8);
+        // With having arrow keys or spacebar pressed back up, the welcome pop-up disappear
         $(document).keyup(function(e) {
             if (e.keyCode == 32 ||
                 e.keyCode == 37 ||
@@ -286,6 +312,7 @@ var Popup = function() {
         $(".popup div").css("font-size", "4em"); // 45
         $(".popup div").html(this.string);
         $(".popup").css("opacity", 0.8);
+        // With having only 'enter' key pressed back up, the gameover pop-up disappear and game restarts
         $('html').bind('keyup', function(e) {
             if (e.keyCode == 32 ||
                 e.keyCode == 37 ||
@@ -303,6 +330,7 @@ var Popup = function() {
 
 };
 
+// Phrases for instructions, notifications, and gameover popups
 Popup.prototype.tip_welcome = function() {
     this.string = 'INSTRUCTIONS: Get some <span class="yellow">GEMS</span>, Block the bugs using <span class="red">SPACEBAR</span>, and Get to the water using <span class="red">ARROW KEYS</span> to win!!';
 };
@@ -318,20 +346,28 @@ Popup.prototype.tip_faster_speed = function() {
 Popup.prototype.tip_spacebar = function() {
     this.string = 'Tip : Get <span class="yellow">GEMS</span>, and press <span class="red">SPACEBAR</span> to block the bugs!';
 };
+
 Popup.prototype.tip_rocks = function() {
-    this.string = 'Tip : <span class="yellow">Rocks</span> can block <span class="red">two bugs!</span> Sometimes some can do more!';
+    this.string = 'Tip : <span class="yellow">Rocks</span> can block <span class="red">two bugs!</span>';
 };
+
 Popup.prototype.gameover = function() {
     this.string = '<span class="red">- GAMEOVER -</span> \n Press <span class="yellow">ENTER</span> to play again!';
 };
 
+/**
+ * Helper Class object for leveling up each round, generating enemy and rock objects, and displaying the panel
+ * @class
+ */
 var Level = function() {
+    // leveling up
     this.level = 1;
     this.numberOfEnemies = 2;
     this.score = 0;
 
-    // TODO: create other conditions that will generate another enemy instance or kill one
-    this.enemyGenerator = function() { // generates as many enemies as preset in the Level object
+    // TODO: create other conditions under which another enemy instance gets generated or gets killed
+    // Generate as many enemy instances as preset in this Level object having been leveled up
+    this.enemyGenerator = function() {
         while (allEnemies.length < this.numberOfEnemies) {
             const enemy = new Enemy();
             allEnemies.push(enemy);
@@ -340,23 +376,21 @@ var Level = function() {
         }
     };
 
+    // Generate and push a rock instance into 'allRocksTemp' array
     this.rockGenerator = function() {
-        // while (allRocksTemp.length - 1 < gemPocket) {
         const rock = new Rock();
         allRocksTemp.push(rock);
-        console.log('level.rockGenerator generated');
-        // }
     };
 
+    // Display data on the panel
     this.display = function() {
         $(".level").html(this.level);
         $(".numBugs").html(this.numberOfEnemies);
-
         const enemiesSpeeds = [];
         for (enemy of allEnemies) {
             enemiesSpeeds.push(enemy.speed);
-            console.log('enemiesSpeeds: ', enemiesSpeeds);
         }
+        // display the highest speed of the fasted bug generated
         function getMaxSpeed(numArray) {
             return Math.max.apply(null, numArray);
         }
@@ -365,6 +399,11 @@ var Level = function() {
     };
 };
 
+/**
+ * If leveled up, add up one level and score,
+ * generate a new gem instance and a new enemy or speed,
+ * and show pop-ups on each new start
+ */
 Level.prototype.up = function() {
     this.level++;
     this.score += this.numberOfEnemies * highestSpeed;
@@ -377,7 +416,7 @@ Level.prototype.up = function() {
             enemy.acceleration(40);
         }
     }
-
+    // Show notification pop-ups
     switch (true) {
         case this.level % 5 == 0:
             popup.tip_rocks();
@@ -394,20 +433,13 @@ Level.prototype.up = function() {
     popup.show();
 };
 
-
-
-
-// Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
-// Place the player object in a variable called player
-
+// Instantiate objects, and initialize variables
 let gemPocket = 0;
 let highestSpeed = 0;
 const allEnemies = [];
 const level = new Level();
 level.enemyGenerator();
 const allRocksTemp = [];
-// level.rockGenerator();
 const player = new Player();
 level.display();
 const popup = new Popup();
@@ -419,8 +451,7 @@ popup.show_welcome();
 
 
 
-// This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
+// Listen for key presses and send the keys to Player.handleInput() method.
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
         37: 'left',

@@ -53,15 +53,17 @@ Enemy.prototype.update = function(dt) {
     // all computers.
     this.x += this.speed * dt;
 
-    // Detect enemy out of the canvas, and reset the position
+    // Detect enemy out of the canvas, and reset its position
     if (this.x > 800) {
         this.reposition(0);
     }
-    // Detect a level-up that generates another enemy into the enemy array, and if that's the case, generate one more
+    // Call enemy instance generation function, which
+    // will detect conditions that generate another enemy instance,
+    // for instance : level-up followed by player's win
     level.enemyGenerator();
 
-    // Detect collision with player, and
-    // if collided, subtract one from gemPocket, and set the player at the default position
+    // Detect collision with player, and if collided,
+    // subtract a gem from the gemPocket, and set the player at the default position
     if (player.x < this.x + 80 &&
        player.x + 70 > this.x &&
        player.y < this.y + 25 &&
@@ -69,7 +71,7 @@ Enemy.prototype.update = function(dt) {
         gemPocket--;
         player.x = 3 * 101;
         player.y = 574;
-        // if player doesn't have any more gem, she/he loses
+        // if player runs out of gems, she/he loses,
         // and show a gameover message
         if (gemPocket === -1) {
             popup.gameover();
@@ -100,24 +102,25 @@ var Player = function() {
 /**
  * Update player's position
  */
-Player.prototype.update = function(dt) {
-    // If player wins(reaches the water),
-    // set it on the default position, and set the level up
+Player.prototype.update = function() {
+    // If player wins(reaches the water):
     if (this.y < 0) {
-        // Detect t
+        // Take instances of planted rocks out of allRocksTemp array(out of canvas),
         for (rock of allRocksTemp) {
             if (rock.planted === true) {
                 let index = allRocksTemp.indexOf(rock);
                 allRocksTemp.splice(index, 1);
             }
         }
+
+        // Set the player on the default position, and set the level up
         this.x = 3 * 101;
         this.y = 574;
         level.up();
         level.display();
     }
 
-    // set the player's move in the boundary of the canvas
+    // Set the player's move in the boundary of the canvas
     if (this.y > 574) {
         this.y -= 83;
     }
@@ -128,6 +131,16 @@ Player.prototype.update = function(dt) {
         this.x -= 101;
     }
 };
+
+
+
+
+
+
+
+
+
+
 
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -316,6 +329,8 @@ var Level = function() {
     this.level = 1;
     this.numberOfEnemies = 2;
     this.score = 0;
+
+    // TODO: create other conditions that will generate another enemy instance or kill one
     this.enemyGenerator = function() { // generates as many enemies as preset in the Level object
         while (allEnemies.length < this.numberOfEnemies) {
             const enemy = new Enemy();

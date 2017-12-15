@@ -1,44 +1,67 @@
-// Enemies our player must avoid
-var Enemy = function() {
-    // Variables applied to each of our instances go here,
-    // we've provided one for you to get started
+/**
+ * @file overview Classic Arcade Game Clone project for Udacity's FEND.
+ * @author jaeminche@gmail.com
+ */
 
-    // The image/sprite for our enemies, this uses
-    // a helper we've provided to easily load images
+
+// TODO:
+// - Make it device-responsive, especially with touchable control
+// - Add leader board
+// - Add pause button
+
+
+/**
+ * Generate an instance of Enemies
+ * @class
+ */
+var Enemy = function() {
+    // Set the enemy's default position with an x coordinate and a randomly generated y coordinate from initPosY array
     const initPosX = -120;
     const initPosY = [62, 145, 229, 312, 395];
+    // Get added up to enemy's speed
     let acceleration = 0;
     this.x = initPosX;
     this.y = initPosY[Math.floor(Math.random() * initPosY.length)];
+    // Set the enemy's speed with a max speed at 150 and a min speed at 50
     this.speed = Math.floor(Math.random() * 150) + 50;
+    // Sets the enemy's image
     this.sprite = 'images/enemy-bug.png';
+    /**
+     * Reset enemy at the default position with a randomly generated Y coordinate
+     */
     this.reposition = function() {
         this.x = initPosX;
         this.y = initPosY[Math.floor(Math.random() * initPosY.length)];
     };
+    /**
+     * Add up some speed(40) to the max speed
+     * @param {number} acceleration speed - triggered if leveled up
+     */
     this.acceleration = function(accelerate) {
         acceleration += accelerate;
         this.speed = Math.floor(Math.random() * (150 + acceleration)) + 50;
     };
 };
 
-// Update the enemy's position, required method for game
-// Parameter: dt, a time delta between ticks
+/**
+ * Update the enemy's position
+ * @param {number} dt - a time delta between ticks
+ */
 Enemy.prototype.update = function(dt) {
-    // You should multiply any movement by the dt parameter
+    // Multiply x coordinate by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
     this.x += this.speed * dt;
 
-    // Detect enemy out of the canvas, and regenerate it
+    // Detect enemy out of the canvas, and reset the position
     if (this.x > 800) {
         this.reposition(0);
     }
-
+    // Detect a level-up that generates another enemy into the enemy array, and if that's the case, generate one more
     level.enemyGenerator();
 
-
-    // Detect collision, and set the player at the default position
+    // Detect collision with player, and
+    // if collided, subtract one from gemPocket, and set the player at the default position
     if (player.x < this.x + 80 &&
        player.x + 70 > this.x &&
        player.y < this.y + 25 &&
@@ -46,24 +69,26 @@ Enemy.prototype.update = function(dt) {
         gemPocket--;
         player.x = 3 * 101;
         player.y = 574;
-
+        // if player doesn't have any more gem, she/he loses
+        // and show a gameover message
         if (gemPocket === -1) {
             popup.gameover();
             popup.show_gameover();
         }
-
-
     }
 };
 
-// Draw the enemy on the screen, required method for game
+/**
+ * Draw the enemy on the canvas
+ */
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-// Now write your own player class
-// This class requires an update(), render() and
-// a handleInput() method.
+/**
+ * Generate a player with x & y coodinates for the default position and ones for a previous move
+ * @class
+ */
 var Player = function() {
     this.sprite = 'images/char-boy.png';
     this.x = 3 * 101;
@@ -72,16 +97,21 @@ var Player = function() {
     this.previousY = 0;
 };
 
+/**
+ * Update player's position
+ */
 Player.prototype.update = function(dt) {
-    // if player reaches the water, set her on the default position
+    // If player wins(reaches the water),
+    // set it on the default position, and set the level up
     if (this.y < 0) {
         this.x = 3 * 101;
         this.y = 574;
         level.up();
         level.display();
-        let numOfRocksToBeDeleted = allRocks.length - 1;
+        // Detect t
+        let numOfRocksToBeDeleted = allRocksTemp.length - 1;
         for (let i = 0; i < numOfRocksToBeDeleted; i ++) {
-            allRocks.pop();
+            allRocksTemp.splice(0, 1);
         }
     }
 
@@ -125,7 +155,7 @@ Player.prototype.handleInput = function(pressedKey) {
     }
 
     if (pressedKey === 'spacebar' && gemPocket > 0) {
-        allRocks[gemPocket].plant();
+        allRocksTemp[gemPocket].plant();
     }
 };
 
@@ -185,6 +215,7 @@ Rock.prototype.update = function() {
             this.detected++;
             if (this.detected === 2) {
                 this.x = -100;
+                // allRocksTemp.splice(this, 1);
             }
         }
     }
@@ -289,9 +320,9 @@ var Level = function() {
     };
 
     this.rockGenerator = function() {
-        while (allRocks.length - 1 < gemPocket) {
+        while (allRocksTemp.length - 1 < gemPocket) {
             const rock = new Rock();
-            allRocks.push(rock);
+            allRocksTemp.push(rock);
             console.log('level.rockGenerator generated');
         }
     };
@@ -351,7 +382,7 @@ Level.prototype.up = function() {
 
 let gemPocket = 0;
 let highestSpeed = 0;
-const allRocks = [];
+const allRocksTemp = [];
 const allEnemies = [];
 const level = new Level();
 level.enemyGenerator();

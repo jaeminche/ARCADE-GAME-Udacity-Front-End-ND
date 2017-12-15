@@ -98,7 +98,7 @@ var Engine = (function(global) {
         });
         player.update();
         gem.update();
-        allRocks.forEach(function(rock) {
+        allRocksTemp.forEach(function(rock) {
             rock.update(dt);
         });
     }
@@ -164,7 +164,7 @@ var Engine = (function(global) {
 
         player.render();
         gem.render();
-        allRocks.forEach(function(rock) {
+        allRocksTemp.forEach(function(rock) {
             rock.render();
         });
     }
@@ -176,7 +176,7 @@ var Engine = (function(global) {
     function reset() {
         // gemPocket = 0;
         // highestSpeed = 0;
-        // allRocks = [];
+        // allRocksTemp = [];
         // allEnemies = [];
         // level = new Level();
         // level.enemyGenerator();

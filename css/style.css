@@ -64,43 +64,26 @@ canvas {
 
 
 
-/*@import url(https://fonts.googleapis.com/css?family=Indie+Flower);
-*/
+ /*Generate pop-ups' style*/
 .popup {
   position:fixed;
-  left:50vw;
-  margin-left:35px;
-  top:50vh;
-  margin-top:-210px;
+  left:45vw;
+  margin-left:2em;
+  top:35em;
+  margin-top:-13em;
   opacity:0;
   transition:all 1s;
   -webkit-transition:all 1s;
 }
 
-
 .popup div {
-  width:200px;
-  font-size:20px;
   font-family: 'Indie Flower', cursive;
-}
-
-.popup div {
-  padding:50px;
+  padding:1.5em;
   background-color:black;
-  border-radius:40px;
+  border-radius:2.5em;
   color:white;
   text-align:center;
 }
-
-
-/* Gestion des évenements */
-
-/*.button:hover ~.popup
-{
-  margin-left:45px;
-  margin-top:-220px;
-  opacity:1;
-}*/
 
 .yellow {
 	color: yellow;

@@ -1,14 +1,10 @@
 /* Engine.js
+ * @file overview Classic Arcade Game Clone project for Udacity's FEND.
  * This file provides the game loop functionality (update entities and render),
  * draws the initial game board on the screen, and then calls the update and
- * render methods on your player and enemy objects (defined in your app.js).
+ * render methods on the player and enemy objects (defined in app.js).
  *
- * A game engine works by drawing the entire game screen over and over, kind of
- * like a flipbook you may have created as a kid. When your player moves across
- * the screen, it may look like just that image/character is moving or being
- * drawn but that is not the case. What's really happening is the entire "scene"
- * is being drawn over and over, presenting the illusion of animation.
- *
+ * A game engine works by drawing the entire game screen over and over.
  * This engine makes the canvas' context (ctx) object globally available to make
  * writing app.js a little simpler to work with.
  */
@@ -174,20 +170,6 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        // gemPocket = 0;
-        // highestSpeed = 0;
-        // allRocksTemp = [];
-        // allEnemies = [];
-        // level = new Level();
-        // level.enemyGenerator();
-        // level.rockGenerator();
-        // player = new Player();
-        // level.display();
-        // popup = new Popup();
-        // gem = new Gem();
-        // rock = new Rock();
-        // popup.tip_welcome();
-        // popup.show_welcome();
     }
 
     /* Go ahead and load all of the images we know we're going to need to

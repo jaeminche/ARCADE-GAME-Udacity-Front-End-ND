@@ -1,6 +1,6 @@
 /**
  * @file overview Classic Arcade Game Clone project for Udacity's FEND.
- * @author jaeminche@gmail.com
+ * @author Jae M. Choi <jaeminche@gmail.com>
  */
 
 
@@ -280,8 +280,8 @@ Rock.prototype.render = function() {
 var Popup = function() {
     this.string = '';
     this.show = function() {
-        $(".popup div").css("width", "8em");
-        $(".popup div").css("font-size", "1.5em");
+        $(".popup div").css("width", "10em");
+        $(".popup div").css("font-size", "1.7em");
         $(".popup div").html(this.string);
         $(".popup").css("opacity", 0.7);
         // After 2.5 sec, pop-ups disappear automatically
@@ -290,8 +290,8 @@ var Popup = function() {
         }, 2500);
     };
     this.show_welcome = function() {
-        $(".popup div").css("width", "9em");
-        $(".popup div").css("font-size", "1.8em");
+        $(".popup div").css("width", "11em");
+        $(".popup div").css("font-size", "2em");
         $(".popup div").html(this.string);
         $(".popup").css("opacity", 0.8);
         // With having arrow keys or spacebar pressed back up, the welcome pop-up disappear
@@ -306,13 +306,11 @@ var Popup = function() {
         });
     };
     this.show_gameover = function() {
-        $(".popup").css("left", "30vw");
-        $(".popup div").css("width", "9em"); // 250
-        $(".popup div").css("height", "4em");
-        $(".popup div").css("font-size", "4em"); // 45
+        $(".popup div").css("width", "6em");
+        $(".popup div").css("font-size", "3em");
         $(".popup div").html(this.string);
         $(".popup").css("opacity", 0.8);
-        // With having only 'enter' key pressed back up, the gameover pop-up disappear and game restarts
+        // With having only an 'enter' key pressed back up, the gameover pop-up disappear and game restarts
         $('html').bind('keyup', function(e) {
             if (e.keyCode == 32 ||
                 e.keyCode == 37 ||

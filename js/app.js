@@ -100,10 +100,23 @@ var Player = function() {
     this.previousY = 0;
 };
 
+Player.prototype.controller = function() {
+    // $('.rotate').css("transform-origin", 50%, 50%);
+
+    $('.rotate').css("top", this.y - ($('.rectangle').width()) + 101);
+    $('.rotate').css("left", this.x - ($('.rectangle').height()) + 25);
+
+    // $('.touch-controller').offset({top: this.y, left: this.x + ($('.rectangle').width() * 2)});
+
+
+    // $('.touch-controller').offset({top: this.y - 244, left: this.x -353});
+};
+
 /**
  * Update player's position
  */
 Player.prototype.update = function() {
+    player.controller();
     // If player wins(reaches the water):
     if (this.y < 0) {
         // Take instances of planted rocks out of allRocksTemp array(out of canvas),
@@ -294,7 +307,7 @@ var Popup = function() {
         $(".popup div").css("font-size", "2em");
         $(".popup div").html(this.string);
         $(".popup").css("opacity", 0.8);
-        // With having arrow keys or spacebar pressed back up, the welcome pop-up disappear
+        // Listen to arrow keys or spacebar pressed back up, and the welcome pop-up disappear
         $(document).keyup(function(e) {
             if (e.keyCode == 32 ||
                 e.keyCode == 37 ||
@@ -310,7 +323,7 @@ var Popup = function() {
         $(".popup div").css("font-size", "3em");
         $(".popup div").html(this.string);
         $(".popup").css("opacity", 0.8);
-        // With having only an 'enter' key pressed back up, the gameover pop-up disappear and game restarts
+        // Listen only to an 'enter' key pressed back up, and the gameover pop-up disappear and game restarts
         $('html').bind('keyup', function(e) {
             if (e.keyCode == 32 ||
                 e.keyCode == 37 ||
@@ -431,6 +444,25 @@ Level.prototype.up = function() {
     popup.show();
 };
 
+
+// var Controller1 = function() {
+//     this.x = player.x;
+//     this.y = player.y;
+//     this.sprite = 'images/controller.png';
+//     this.show = function() {
+//         $(".touch-controller").css()
+//         $(".popup div").css("width", "10em");
+// };
+
+// Controller.prototype.update = function() {
+
+// };
+
+// Controller.prototype.render = function() {
+
+// };
+
+
 // Instantiate objects, and initialize variables
 let gemPocket = 0;
 let highestSpeed = 0;
@@ -445,6 +477,8 @@ let gem = new Gem();
 let rock = new Rock();
 popup.tip_welcome();
 popup.show_welcome();
+player.controller();
+// let controller = new Controller();
 
 
 
@@ -470,3 +504,16 @@ document.addEventListener('keydown', function(e) {
     player.previousY = 0;
     player.handleInput(allowedKeys1[e.keyCode]);
 });
+
+$('.rectangle1').click(function() {
+    player.x -= 83;
+})
+$('.rectangle2').click(function() {
+    player.y -= 83;
+})
+$('.rectangle3').click(function() {
+    player.y += 83;
+})
+$('.rectangle4').click(function() {
+    player.x += 83;
+})

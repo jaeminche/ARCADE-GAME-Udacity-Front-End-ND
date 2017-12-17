@@ -1,6 +1,6 @@
 html {
-	background-color: black;
-	margin: auto;
+    background-color: black;
+    margin: auto;
 }
 
 body {
@@ -10,53 +10,53 @@ body {
 }
 
 #logo {
-	background: url(../images/frogger-logo.png);
-	background-repeat: no-repeat;
-  background-position: center;
-  padding: 2.5em;
-  background-size: 20em;
+    background: url(../images/frogger-logo.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    padding: 2.5em;
+    background-size: 20em;
 }
 
 .stat-container {
-  margin-top: 1.5em;
+    margin-top: 1.5em;
 }
 
 .flex-container {
-	display: flex;
-	justify-content: space-between;
-	flex-wrap: wrap;
-	padding: 0.5em;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding: 0.5em;
 }
 
 .bug-image {
-  background: url('../images/enemy-bug.png');
+    background: url('../images/enemy-bug.png');
 }
 
 .rock-image {
-  background: url('../images/rock.png');
+    background: url('../images/rock.png');
 }
 
 .bug-image,
 .rock-image {
-  background-repeat: no-repeat;
-  background-position: center;
-  padding: 2.5em;
-  background-size: 2.5em;
-  background-position: right 1em bottom 1.5em;
+    background-repeat: no-repeat;
+    background-position: center;
+    padding: 2.5em;
+    background-size: 2.5em;
+    background-position: right 1em bottom 1.5em;
 }
 
 
 
 .stat-num {
-	color: yellow;
+    color: yellow;
 }
 
 .level-block {
-	color: red;
+    color: red;
 }
 
 canvas {
-	margin-top: -3em;
+    margin-top: -3em;
 }
 
 
@@ -66,29 +66,88 @@ canvas {
 
  /*Generate pop-ups' style*/
 .popup {
-  position:fixed;
-  left:45vw;
-  margin-left:2em;
-  top:35em;
-  margin-top:-13em;
-  opacity:0;
-  transition:all 1s;
-  -webkit-transition:all 1s;
+    position:fixed;
+    left:45vw;
+    margin-left:2em;
+    top:35em;
+    margin-top:-13em;
+    opacity:0;
+    transition:all 1s;
+    -webkit-transition:all 1s;
 }
 
 .popup div {
-  font-family: 'Indie Flower', cursive;
-  padding:1.5em;
-  background-color:black;
-  border-radius:2.5em;
-  color:white;
-  text-align:center;
+    font-family: 'Indie Flower', cursive;
+    padding:1.5em;
+    background-color:black;
+    border-radius:2.5em;
+    color:white;
+    text-align:center;
 }
 
 .yellow {
-	color: yellow;
+    color: yellow;
 }
 
 .red {
-	color: red;
+    color: red;
+}
+
+
+
+.fix-controller {
+    position: fixed;
+}
+
+.touch-controller {
+    /*left: -50px;*/
+    /*top: 330px;*/
+    position: relative;
+    margin: auto;
+    opacity: 0.2;
+}
+
+.flex-wrap {
+    justify-content: flex-wrap;
+}
+
+.rotate {
+    transform: rotate(-45deg);
+    transform-origin: 50% 50%;
+}
+
+.rotateUpper {
+    display: flex;
+    justify-content: center;
+
+}
+
+.rotateLower {
+    display: flex;
+    justify-content: center;
+
+}
+
+.rectangle1 {
+    background: red;
+}
+
+
+.rectangle2 {
+    background: orange;
+}
+
+
+.rectangle3 {
+    background: yellow;
+}
+
+
+.rectangle4 {
+    background: green;
+}
+
+.rectangle {
+/*    width: 500px;
+    height: 500px;*/
 }

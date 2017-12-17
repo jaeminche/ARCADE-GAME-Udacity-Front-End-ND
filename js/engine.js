@@ -27,6 +27,18 @@ var Engine = (function(global) {
     $('.flex-container').css("max-width", canvas.width);
     $('.flex-container').css("margin", "auto");
 
+    // Set contoller's container fixed with the same size as canvas
+    var canvasPos = $('canvas').offset();
+    $('.fix-controller').offset({top: canvasPos.top, left: canvasPos.left})
+    $('.fix-controller').width(canvas.width);
+    $('.fix-controller').height(canvas.height);
+
+    $('.rectangle').width(canvas.width / 2);
+    $('.rectangle').height(canvas.height / 2);
+
+    // $('.rotate').css('center', player.x);
+    // $('.rotate').css('center', player.y);
+
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
      */
@@ -93,6 +105,7 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
+        // controller.update();
         gem.update();
         allRocksTemp.forEach(function(rock) {
             rock.update(dt);
@@ -157,8 +170,8 @@ var Engine = (function(global) {
         allEnemies.forEach(function(enemy) {
             enemy.render();
         });
-
         player.render();
+        // controller.render();
         gem.render();
         allRocksTemp.forEach(function(rock) {
             rock.render();
@@ -184,6 +197,7 @@ var Engine = (function(global) {
         'images/char-boy.png',
         'images/gem-orange.png',
         'images/rock.png'
+        // 'images/controller.png'
     ]);
     Resources.onReady(init);
 

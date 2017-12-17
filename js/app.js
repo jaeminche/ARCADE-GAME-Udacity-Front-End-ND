@@ -506,7 +506,7 @@ document.addEventListener('keydown', function(e) {
 });
 
 $('.rectangle1').click(function() {
-    player.x -= 83;
+    player.x -= 101;
 })
 $('.rectangle2').click(function() {
     player.y -= 83;
@@ -515,5 +515,5 @@ $('.rectangle3').click(function() {
     player.y += 83;
 })
 $('.rectangle4').click(function() {
-    player.x += 83;
+    player.x += 101;
 })

@@ -182,6 +182,9 @@ Player.prototype.handleInput = function(pressedKey) {
     if (pressedKey === 'spacebar' && gemPocket > 0) {
         allRocksTemp[gemPocket - 1].plant();
     }
+    if (popup.name != 'gameover') {
+        $(".popup").css("opacity", 0);
+    }
 };
 
 /**
@@ -291,6 +294,7 @@ Rock.prototype.render = function() {
  * @class
  */
 var Popup = function() {
+    this.name = ''
     this.string = '';
     this.show = function() {
         $(".popup div").css("width", "10em");
@@ -308,61 +312,69 @@ var Popup = function() {
         $(".popup div").html(this.string);
         $(".popup").css("opacity", 0.8);
         // Listen to arrow keys or spacebar pressed back up, and the welcome pop-up disappear
-        $(document).keyup(function(e) {
-            if (e.keyCode == 32 ||
-                e.keyCode == 37 ||
-                e.keyCode == 38 ||
-                e.keyCode == 39 ||
-                e.keyCode == 40) {
-                $(".popup").css("opacity", 0);
-            }
-        });
+        // $(document).keyup(function(e) {
+        //     if (e.keyCode == 32 ||
+        //         e.keyCode == 37 ||
+        //         e.keyCode == 38 ||
+        //         e.keyCode == 39 ||
+        //         e.keyCode == 40) {
+        //         $(".popup").css("opacity", 0);
+        //     }
+        // });
     };
     this.show_gameover = function() {
         $(".popup div").css("width", "6em");
-        $(".popup div").css("font-size", "3em");
+        $(".popup div").css("font-size", "2.5em");
         $(".popup div").html(this.string);
         $(".popup").css("opacity", 0.8);
         // Listen only to an 'enter' key pressed back up, and the gameover pop-up disappear and game restarts
         $('html').bind('keyup', function(e) {
-            if (e.keyCode == 32 ||
-                e.keyCode == 37 ||
-                e.keyCode == 38 ||
-                e.keyCode == 39 ||
-                e.keyCode == 40) {
+            if (e.keyCode != 13) {
                 e.preventDefault();
                 return false;
-            } else if (e.keyCode == 13) {
+            } else {
                 $(".popup").css("opacity", 0);
                 location.reload();
             }
         });
+
+        // $(".rock-button-controller").on("click", function(event) {
+        //     player.previousX = 0;
+        //     player.previousY = 0;
+        //     player.handleInput('spacebar');
+        // });
     };
 
 };
 
 // Phrases for instructions, notifications, and gameover popups
 Popup.prototype.tip_welcome = function() {
+    this.name = 'welcome';
     this.string = 'INSTRUCTIONS: Get some <span class="yellow">GEMS</span>, Block the bugs using <span class="red">SPACEBAR</span>, and Get to the water using <span class="red">ARROW KEYS</span> to win!!';
 };
 
 Popup.prototype.tip_more_bug = function() {
+    this.name = 'more_bug';
     this.string = 'LOOK OUT! <span class="red">ONE MORE BUG</span> is coming!!';
 };
 
 Popup.prototype.tip_faster_speed = function() {
+    this.name = 'faster';
     this.string = 'Now, THEY are getting <span class="red">FASTER!!</span>';
 };
 
 Popup.prototype.tip_spacebar = function() {
+    this.name = 'tip_spacebar';
     this.string = 'Tip : Get <span class="yellow">GEMS</span>, and press <span class="red">SPACEBAR</span> to block the bugs!';
 };
 
 Popup.prototype.tip_rocks = function() {
+    this.name = 'tip_rocks';
     this.string = 'Tip : <span class="yellow">Rocks</span> can block <span class="red">two bugs!</span>';
 };
 
 Popup.prototype.gameover = function() {
+    this.name = 'gameover';
     this.string = '<span class="red">- GAMEOVER -</span> \n Press <span class="yellow">ENTER</span> to play again!';
 };
 
@@ -427,7 +439,7 @@ Level.prototype.up = function() {
             enemy.acceleration(40);
         }
     }
-    // Show notification pop-ups
+    // Show a notification pop-up in accordance of level
     switch (true) {
         case this.level % 5 == 0:
             popup.tip_rocks();
@@ -506,27 +518,21 @@ document.addEventListener('keydown', function(e) {
     player.handleInput(allowedKeys1[e.keyCode]);
 });
 
-
-
 $('.rectangle1').on("click", function(event) {
-    player.x -= 101;
-    $(".popup").css("opacity", 0);
-})
+    player.handleInput('left');
+});
 $('.rectangle2').on("click", function(event) {
-    player.y -= 83;
-    $(".popup").css("opacity", 0);
-})
+    player.handleInput('up');
+});
 $('.rectangle3').on("click", function(event) {
-    player.y += 83;
-    $(".popup").css("opacity", 0);
-})
+    player.handleInput('down');
+});
 $('.rectangle4').on("click", function(event) {
-    player.x += 101;
-    $(".popup").css("opacity", 0);
-})
+    player.handleInput('right');
+});
 
 $(".rock-button-controller").on("click", function(event) {
-    if (gemPocket > 0) {
-        allRocksTemp[gemPocket - 1].plant();
-    }
-})
+    player.previousX = 0;
+    player.previousY = 0;
+    player.handleInput('spacebar');
+});

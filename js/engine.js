@@ -23,18 +23,26 @@ var Engine = (function(global) {
 
     canvas.width = 808;
     canvas.height = 757;
+
     doc.body.appendChild(canvas);
     $('.flex-container').css("max-width", canvas.width);
     $('.flex-container').css("margin", "auto");
 
-    // Set contoller's container fixed with the same size as canvas
-    var canvasPos = $('canvas').offset();
-    $('.fix-controller').offset({top: canvasPos.top, left: canvasPos.left})
-    $('.fix-controller').width(canvas.width);
-    $('.fix-controller').height(canvas.height);
+    var canvasPos = $("canvas").position();
+    // $(".fix-controller").position({top: canvas.height + 100 + $("#logo").height() + $(".stat-container").height(), left: $(".stat-container").left});
+    $(".fix-controller").css("left", canvasPos.left);
+    $(".fix-controller").css("top", canvasPos.top + 20 + $("canvas").height());
+    $(".fix-controller").css("width", $("canvas").width());
 
-    $('.rectangle').width(canvas.width / 2);
-    $('.rectangle').height(canvas.height / 2);
+
+    // Set contoller's container fixed with the same size as canvas
+    // var canvasPos = $('canvas').offset();
+    // $('.fix-controller').offset({top: canvasPos.top, left: canvasPos.left})
+    // $('.fix-controller').width(canvas.width);
+    // $('.fix-controller').height(canvas.height);
+
+    // $('.rectangle').width(canvas.width / 2);
+    // $('.rectangle').height(canvas.height / 2);
 
     // $('.rotate').css('center', player.x);
     // $('.rotate').css('center', player.y);

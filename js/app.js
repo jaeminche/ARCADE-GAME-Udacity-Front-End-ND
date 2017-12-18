@@ -5,7 +5,6 @@
 
 
 // TODO:
-// - Make it device-responsive, especially with touchable control
 // - Add leader board
 // - Add pause button
 // - Add a combo bonus for three-serial gems collected
@@ -102,9 +101,10 @@ var Player = function() {
 
 Player.prototype.controller = function() {
     // $('.rotate').css("transform-origin", 50%, 50%);
-
-    $('.rotate').css("top", this.y - ($('.rectangle').width()) + 101);
-    $('.rotate').css("left", this.x - ($('.rectangle').height()) + 25);
+    // $('.rotate').css("top", this.y);
+    // $('.rotate').css("left", this.x);
+    // $('.rotate').css("top", this.y - ($('.rectangle').width()) + 101);
+    // $('.rotate').css("left", this.x - ($('.rectangle').height()) + 25);
 
     // $('.touch-controller').offset({top: this.y, left: this.x + ($('.rectangle').width() * 2)});
 
@@ -116,7 +116,7 @@ Player.prototype.controller = function() {
  * Update player's position
  */
 Player.prototype.update = function() {
-    player.controller();
+    // player.controller();
     // If player wins(reaches the water):
     if (this.y < 0) {
         // Take instances of planted rocks out of allRocksTemp array(out of canvas),
@@ -303,8 +303,8 @@ var Popup = function() {
         }, 2500);
     };
     this.show_welcome = function() {
-        $(".popup div").css("width", "11em");
-        $(".popup div").css("font-size", "2em");
+        $(".popup div").css("width", "9em");
+        $(".popup div").css("font-size", "1.8em");
         $(".popup div").html(this.string);
         $(".popup").css("opacity", 0.8);
         // Listen to arrow keys or spacebar pressed back up, and the welcome pop-up disappear
@@ -477,7 +477,8 @@ let gem = new Gem();
 let rock = new Rock();
 popup.tip_welcome();
 popup.show_welcome();
-player.controller();
+
+// player.controller();
 // let controller = new Controller();
 
 
@@ -505,15 +506,27 @@ document.addEventListener('keydown', function(e) {
     player.handleInput(allowedKeys1[e.keyCode]);
 });
 
-$('.rectangle1').click(function() {
+
+
+$('.rectangle1').on("click", function(event) {
     player.x -= 101;
+    $(".popup").css("opacity", 0);
 })
-$('.rectangle2').click(function() {
+$('.rectangle2').on("click", function(event) {
     player.y -= 83;
+    $(".popup").css("opacity", 0);
 })
-$('.rectangle3').click(function() {
+$('.rectangle3').on("click", function(event) {
     player.y += 83;
+    $(".popup").css("opacity", 0);
 })
-$('.rectangle4').click(function() {
+$('.rectangle4').on("click", function(event) {
     player.x += 101;
+    $(".popup").css("opacity", 0);
+})
+
+$(".rock-button-controller").on("click", function(event) {
+    if (gemPocket > 0) {
+        allRocksTemp[gemPocket - 1].plant();
+    }
 })

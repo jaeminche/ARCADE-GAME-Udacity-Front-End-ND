@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Effective JavaScript: Frogger</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
     <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css?family=Press+Start+2P" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css?family=Indie+Flower" rel="stylesheet">
@@ -20,7 +21,7 @@
             <div class="stat-box rock-block"><span class="rock-image"></span> x <span class="stat-num num-rock"></span></div>
         </div>
         <div class="flex-container">
-            <div class="stat-box score-block">SCORE: <span class="stat-num score"></span></div>
+            <div class="stat-box score-block">SCORE: <span class="stat-num score"> </span></div>
             <div class="stat-box level-block">LEVEL <span class="stat-num level"></span></div>
         </div>
     </section>
@@ -28,14 +29,14 @@
     <div class="popup">
       <div></div>
       <svg height="50" width="100">
-        <path d="M0 50 L40 0 L65 0 Z" />
+        <path d="M0 50 L40 0 L65 0
+         Z" />
         Sorry, your browser does not support inline SVG.
       </svg>
     </div>
 
     <section class="fix-controller">
-        <section class="touch-controller flex-wrap rotate">
-            <!-- <div class="flex-wrap rotate"> -->
+        <div class="touch-controller rotate">
             <div class="rotateUpper">
                 <span class="rectangle rectangle1"></span>
                 <span class="rectangle rectangle2"></span>
@@ -44,15 +45,19 @@
                 <span class="rectangle rectangle3"></span>
                 <span class="rectangle rectangle4"></span>
             </div>
-            <!-- </div> -->
-        </section>
+        </div>
+        <div class="rock-button-controller">
+        </div>
     </section>
 
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="js/resources.js"></script>
-    <script src="js/app.js"></script>
+
     <script src="js/engine.js"></script>
+    <script src="js/app.js"></script>
+    <!-- <script src="js/no_double_tap_zoom.js"></script> -->
+    <script src="js/nodoubletapzoom_iphone.js"></script>
 
 </body>
 </html>

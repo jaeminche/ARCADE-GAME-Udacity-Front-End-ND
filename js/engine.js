@@ -25,18 +25,31 @@ var Engine = (function(global) {
     canvas.height = 757;
 
     doc.body.appendChild(canvas);
-    $('.flex-container').css("max-width", canvas.width);
-    $('.flex-container').css("margin", "auto");
-
-    var canvasPos = $("canvas").position();
+    $('body').css('width', canvas.width);
+    // $('.stat-container').css("width", canvas.width);
+    // $('#logo').css("width", canvas.width);
+    // var canvasPos = $("canvas").position();
     // $(".fix-controller").position({top: canvas.height + 100 + $("#logo").height() + $(".stat-container").height(), left: $(".stat-container").left});
-    $(".fix-controller").css("left", canvasPos.left);
-    $(".fix-controller").css("top", canvasPos.top + 20 + $("canvas").height());
-    $(".fix-controller").css("width", $("canvas").width());
+    // $('.fix-controller').css("width", canvas.width);
+    $('canvas').insertBefore(".fix-controller");
+
+    // $('.fix-controller .popup').insertAfter("canvas");
+    // $( ".popup" ).insertAfter( "fix-controller" );
+    // $(".fix-controller").css("left", canvasPos.left);
+    // $(".fix-controller").css("top", canvasPos.top + 20 + $("canvas").height());
+    // $(".fix-controller").css("width", $("canvas").width());
 
 
     // Set contoller's container fixed with the same size as canvas
-    // var canvasPos = $('canvas').offset();
+    var canvasPos = $('canvas').offset();
+    $('.popup').offset({top: canvasPos.top * 2.5});
+
+    // Shorten the body height lengthened as long as the popup's height
+    var originalBodyHt = $('body').height();
+    var popupPos = $('.popup').offset();
+    $('body').height(originalBodyHt - popupPos.top);
+
+
     // $('.fix-controller').offset({top: canvasPos.top, left: canvasPos.left})
     // $('.fix-controller').width(canvas.width);
     // $('.fix-controller').height(canvas.height);

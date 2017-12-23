@@ -1,12 +1,14 @@
 html {
     background-color: black;
-    margin: auto;
+    /*margin: auto;*/
 }
 
 body {
+    margin: auto;
     text-align: center;
     color: white;
     font-family: 'Press Start 2P', cursive;
+    height: 100%;
 }
 
 #logo {
@@ -15,10 +17,14 @@ body {
     background-position: center;
     padding: 2.5em;
     background-size: 20em;
+    margin: auto;
 }
 
 .stat-container {
     margin-top: 1.5em;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .flex-container {
@@ -56,7 +62,9 @@ body {
 }
 
 canvas {
+    /*position: absolute;*/
     margin-top: -3em;
+    /*z-index: 1;*/
 }
 
 
@@ -66,18 +74,40 @@ canvas {
 
  /*Generate pop-ups' style*/
 .popup {
-    position:absolute;
-    left:45vw;
-    margin-left:1em;
-    top:35em;
-    margin-top:-13em;
-    opacity:0;
+    position: relative;
+    width: 50%;
+    left: 40%;
+    /*top:-50em;*/
+    /*margin-left:1em;*/
+    /*margin-top: 70%;*/
+    /*height: 100vmin;*/
+    opacity:0.7;
+    /*z-index: 2;*/
     transition:all 1s;
     -webkit-transition:all 1s;
+
+
+
+/*    display: block;
+    position: relative;
+    top: 10%;
+    left: 25%;
+    width: 50%;
+    /*height: 500px;*/
+    /*padding: 16px;*/
+    /*border: 13px solid #808080;*/
+    /*background-color: white;*/
+ /*   z-index:2;
+    overflow: auto;*/
+}
+
+canvas {
+    /*z-index: 0.5;*/
 }
 
 .popup div {
     font-family: 'Indie Flower', cursive;
+    font-size: 1.7em;
     padding:1.5em;
     background-color:black;
     border-radius:2.5em;
@@ -96,10 +126,12 @@ canvas {
 
 
 .fix-controller {
-    position: absolute;
     display: flex;
+    flex-direction: row;
     justify-content: space-between;
-    opacity: 0;
+    opacity: 0.7;
+    margin: auto;
+    margin-top: 3em;
 }
 
 .touch-controller {
@@ -165,20 +197,37 @@ canvas {
     background: green;
 }
 
-/*.rectangle {*/
-/*    width: 500px;
-    height: 500px;*/
-/*}*/
+
+@-webkit-keyframes blinker {
+  from {opacity: 1.0;}
+  to {opacity: 0.0;}
+}
+
+.blink{
+    text-decoration: blink;
+    -webkit-animation-name: blinker;
+    -webkit-animation-duration: 0.6s;
+    -webkit-animation-iteration-count:infinite;
+    -webkit-animation-timing-function:ease-in-out;
+    -webkit-animation-direction: alternate;
+}
 
 
 @media screen and (max-width: 638px) {
-    canvas {
+/*    canvas {
         width: 100%;
         height: 100%;
         margin-top: -1em;
-    }
+    }*/
+/*
+    #logo {
+        padding: 1em;
+        background-size: 10em;
+    }*/
 
-    .speed-block {
+
+
+/*    .speed-block {
         display: none;
     }
     .numBugs-block {
@@ -194,20 +243,20 @@ canvas {
     }
 
     .popup {
-        left: 0;
-        top: 60%;
+        left: center;
+        top: 70%;
     }
 
     .fix-controller {
         opacity: 0.3;
-    }
+    }*/
+
+
+
+
+
 
 /*
-    #logo {
-        padding: 1.5em;
-        background-size: 10em;
-    }
-
     .stat-container {
         flex-direction: column;
         max-width: 100%;
@@ -216,19 +265,19 @@ canvas {
 
     .flex-container {
         padding: 0.2em;
-    }
+    }*/
 
-    .popup div {
+/*    .popup div {
         width: 4em;
         font-size: 1em;
     }*/
 }
 
-@media screen and (min-width: 639px) and (max-width: 767px) {
-    canvas {
-        /*width: 100%;*/
+@media screen and (min-width: 639px) and (max-width: 1023) {
+ /*   canvas {
+        width: 100%;
         height: 100%;
-    }
+    }*/
 /*
     #logo {
         padding: 1.5em;

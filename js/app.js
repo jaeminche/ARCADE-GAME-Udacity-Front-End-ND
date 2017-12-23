@@ -22,8 +22,8 @@ var Enemy = function() {
     let acceleration = 0;
     this.x = initPosX;
     this.y = initPosY[Math.floor(Math.random() * initPosY.length)];
-    // Set the enemy's speed with a max speed at 150 and a min speed at 50
-    this.speed = Math.floor(Math.random() * 150) + 50;
+    // Set the enemy's speed with a max speed at 150 and a min speed at 30
+    this.speed = Math.floor(Math.random() * 150) + 30;
     // Sets the enemy's image
     this.sprite = 'images/enemy-bug.png';
     /**
@@ -34,12 +34,12 @@ var Enemy = function() {
         this.y = initPosY[Math.floor(Math.random() * initPosY.length)];
     };
     /**
-     * Add up some speed(40) to the max speed
+     * Add up some speed to the max speed
      * @param {number} acceleration speed - triggered if leveled up
      */
     this.acceleration = function(accelerate) {
         acceleration += accelerate;
-        this.speed = Math.floor(Math.random() * (150 + acceleration)) + 50;
+        this.speed = Math.floor(Math.random() * (150 + acceleration)) + 30;
     };
 };
 
@@ -99,7 +99,7 @@ var Player = function() {
     this.previousY = 0;
 };
 
-Player.prototype.controller = function() {
+// Player.prototype.controller = function() {
     // $('.rotate').css("transform-origin", 50%, 50%);
     // $('.rotate').css("top", this.y);
     // $('.rotate').css("left", this.x);
@@ -110,7 +110,7 @@ Player.prototype.controller = function() {
 
 
     // $('.touch-controller').offset({top: this.y - 244, left: this.x -353});
-};
+// };
 
 /**
  * Update player's position
@@ -183,8 +183,11 @@ Player.prototype.handleInput = function(pressedKey) {
         allRocksTemp[gemPocket - 1].plant();
     }
     if (popup.name != 'gameover') {
+        console.log('thisthisthisthis');
         $(".popup").css("opacity", 0);
-    }
+    } //else {
+    //     $(".popup").css("opacity", 0.7);
+    // }
 };
 
 /**
@@ -297,8 +300,7 @@ var Popup = function() {
     this.name = ''
     this.string = '';
     this.show = function() {
-        $(".popup div").css("width", "10em");
-        $(".popup div").css("font-size", "1.7em");
+        // $(".popup").css("width", "50%");
         $(".popup div").html(this.string);
         $(".popup").css("opacity", 0.7);
         // After 2.5 sec, pop-ups disappear automatically
@@ -307,11 +309,23 @@ var Popup = function() {
         }, 2500);
     };
     this.show_welcome = function() {
-        $(".popup div").css("width", "9em");
-        $(".popup div").css("font-size", "1.8em");
+        // $(".popup").css("width", "50%");
         $(".popup div").html(this.string);
         $(".popup").css("opacity", 0.8);
         // Listen to arrow keys or spacebar pressed back up, and the welcome pop-up disappear
+        // $('html').bind('keyup', function(e) {
+        //     if (e.keyCode != 32 ||
+        //        e.keyCode != 37 ||
+        //        e.keyCode != 38 ||
+        //        e.keyCode != 39 ||
+        //        e.keyCode != 40) {
+        //         e.preventDefault();
+        //         return false;
+        //     } else {
+        //         $(".popup").css("opacity", 0);
+        //         return true;
+        //     }
+        // });
         // $(document).keyup(function(e) {
         //     if (e.keyCode == 32 ||
         //         e.keyCode == 37 ||
@@ -323,12 +337,13 @@ var Popup = function() {
         // });
     };
     this.show_gameover = function() {
-        $(".popup div").css("width", "6em");
-        $(".popup div").css("font-size", "2.5em");
+        // $(".popup").css("width", "50%");
+        $(".popup div").css("font-size", "2.3em");
         $(".popup div").html(this.string);
         $(".popup").css("opacity", 0.8);
+
         // Listen only to an 'enter' key pressed back up, and the gameover pop-up disappear and game restarts
-        $('html').bind('keyup', function(e) {
+        $('html').bind('keydown', function(e) {
             if (e.keyCode != 13) {
                 e.preventDefault();
                 return false;
@@ -338,11 +353,10 @@ var Popup = function() {
             }
         });
 
-        // $(".rock-button-controller").on("click", function(event) {
-        //     player.previousX = 0;
-        //     player.previousY = 0;
-        //     player.handleInput('spacebar');
-        // });
+        // Listen to a tap on this, and reload the page to play again
+        $('.popup').on('click', function(e) {
+            location.reload();
+        })
     };
 
 };
@@ -375,7 +389,7 @@ Popup.prototype.tip_rocks = function() {
 
 Popup.prototype.gameover = function() {
     this.name = 'gameover';
-    this.string = '<span class="red">- GAMEOVER -</span> \n Press <span class="yellow">ENTER</span> to play again!';
+    this.string = '<span class="red">- GAMEOVER -</span> \n Press <span class="yellow">ENTER</span> or touch <span class="yellow">this</span> to play again!';
 };
 
 /**
@@ -439,7 +453,7 @@ Level.prototype.up = function() {
             enemy.acceleration(40);
         }
     }
-    // Show a notification pop-up in accordance of level
+    // Show a notification pop-up in accordance of level numbers
     switch (true) {
         case this.level % 5 == 0:
             popup.tip_rocks();
@@ -496,27 +510,24 @@ popup.show_welcome();
 
 
 
+
+
 // Listen for key presses and send the keys to Player.handleInput() method.
-document.addEventListener('keyup', function(e) {
+
+document.addEventListener('keydown', function(e) {
     var allowedKeys = {
         37: 'left',
         38: 'up',
         39: 'right',
         40: 'down',
-        13: 'enter'
-    };
-
-    player.handleInput(allowedKeys[e.keyCode]);
-});
-
-document.addEventListener('keydown', function(e) {
-    var allowedKeys1 = {
+        13: 'enter',
         32: 'spacebar'
     };
     player.previousX = 0;
     player.previousY = 0;
-    player.handleInput(allowedKeys1[e.keyCode]);
+    player.handleInput(allowedKeys[e.keyCode]);
 });
+
 
 $('.rectangle1').on("click", function(event) {
     player.handleInput('left');

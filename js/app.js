@@ -338,7 +338,6 @@ var Popup = function() {
     };
     this.show_gameover = function() {
         // $(".popup").css("width", "50%");
-        $(".popup div").css("font-size", "2.3em");
         $(".popup div").html(this.string);
         $(".popup").css("opacity", 0.8);
 

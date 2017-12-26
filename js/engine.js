@@ -25,8 +25,7 @@ var Engine = (function(global) {
     canvas.height = 757;
 
     doc.body.appendChild(canvas);
-    $('body').css('width', canvas.width);
-    // $('.stat-container').css("width", canvas.width);
+    // $('body').css('width', canvas.width);
     // $('#logo').css("width", canvas.width);
     // var canvasPos = $("canvas").position();
     // $(".fix-controller").position({top: canvas.height + 100 + $("#logo").height() + $(".stat-container").height(), left: $(".stat-container").left});
@@ -42,12 +41,15 @@ var Engine = (function(global) {
 
     // Set contoller's container fixed with the same size as canvas
     var canvasPos = $('canvas').offset();
-    $('.popup').offset({top: canvasPos.top * 2.5});
+    $('.popup').offset({top: canvasPos.top * 1.5});
 
     // Shorten the body height lengthened as long as the popup's height
     var originalBodyHt = $('body').height();
     var popupPos = $('.popup').offset();
     $('body').height(originalBodyHt - popupPos.top);
+    var canvasWidth = $('canvas').width();
+    $('.stat-container, #logo, .fix-controller, .popup').css("width", canvasWidth * 0.9);
+
 
 
     // $('.fix-controller').offset({top: canvasPos.top, left: canvasPos.left})

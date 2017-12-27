@@ -25,48 +25,28 @@ var Engine = (function(global) {
     canvas.height = 757;
 
     doc.body.appendChild(canvas);
-    // $('body').css('width', canvas.width);
-    // $('#logo').css("width", canvas.width);
-    // var canvasPos = $("canvas").position();
-    // $(".fix-controller").position({top: canvas.height + 100 + $("#logo").height() + $(".stat-container").height(), left: $(".stat-container").left});
-    // $('.fix-controller').css("width", canvas.width);
+
+    // Set the controller after the canvas generated
     $('canvas').insertBefore(".fix-controller");
 
-    // $('.fix-controller .popup').insertAfter("canvas");
-    // $( ".popup" ).insertAfter( "fix-controller" );
-    // $(".fix-controller").css("left", canvasPos.left);
-    // $(".fix-controller").css("top", canvasPos.top + 20 + $("canvas").height());
-    // $(".fix-controller").css("width", $("canvas").width());
-
-
-    // Set contoller's container fixed with the same size as canvas
+    // Set the pop-ups' position to be inside the canvas
     var canvasPos = $('canvas').offset();
     $('.popup').offset({top: canvasPos.top * 1.5});
 
-    // Shorten the body height lengthened as long as the popup's height
+    // Shorten the body height, for it has been lengthened for the popup's height
     var originalBodyHt = $('body').height();
     var popupPos = $('.popup').offset();
     $('body').height(originalBodyHt - popupPos.top);
+
+    // Set the logo, the stats display, and the controller's width as 90% of the size of canvas
     var canvasWidth = $('canvas').width();
     $('.stat-container, #logo, .fix-controller, .popup').css("width", canvasWidth * 0.9);
-
-
-
-    // $('.fix-controller').offset({top: canvasPos.top, left: canvasPos.left})
-    // $('.fix-controller').width(canvas.width);
-    // $('.fix-controller').height(canvas.height);
-
-    // $('.rectangle').width(canvas.width / 2);
-    // $('.rectangle').height(canvas.height / 2);
-
-    // $('.rotate').css('center', player.x);
-    // $('.rotate').css('center', player.y);
 
     /* This function serves as the kickoff point for the game loop itself
      * and handles properly calling the update and render methods.
      */
     function main() {
-        /* Get our time delta information which is required if your game
+        /* Get our time delta information which is required if the game
          * requires smooth animation. Because everyone's computer processes
          * instructions at different speeds we need a constant value that
          * would be the same for everyone (regardless of how fast their

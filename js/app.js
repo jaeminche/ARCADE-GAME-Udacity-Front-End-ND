@@ -18,7 +18,6 @@ var Enemy = function() {
     // Set the enemy's default position with an x coordinate and a randomly generated y coordinate from initPosY array
     const initPosX = -120;
     const initPosY = [62, 145, 229, 312, 395];
-    // Get added up to enemy's speed
     let acceleration = 0;
     this.x = initPosX;
     this.y = initPosY[Math.floor(Math.random() * initPosY.length)];
@@ -71,8 +70,8 @@ Enemy.prototype.update = function(dt) {
         gemPocket--;
         player.x = 3 * 101;
         player.y = 574;
-        // if player runs out of gems, she/he loses,
-        // and show a gameover message
+        // if the player runs out of gems, she/he loses,
+        // and show a gameover message pop-up
         if (gemPocket === -1) {
             popup.gameover();
             popup.show_gameover();
@@ -98,19 +97,6 @@ var Player = function() {
     this.previousX = 0;
     this.previousY = 0;
 };
-
-// Player.prototype.controller = function() {
-    // $('.rotate').css("transform-origin", 50%, 50%);
-    // $('.rotate').css("top", this.y);
-    // $('.rotate').css("left", this.x);
-    // $('.rotate').css("top", this.y - ($('.rectangle').width()) + 101);
-    // $('.rotate').css("left", this.x - ($('.rectangle').height()) + 25);
-
-    // $('.touch-controller').offset({top: this.y, left: this.x + ($('.rectangle').width() * 2)});
-
-
-    // $('.touch-controller').offset({top: this.y - 244, left: this.x -353});
-// };
 
 /**
  * Update player's position
@@ -154,8 +140,10 @@ Player.prototype.render = function() {
 };
 
 /**
- * Handle the up, down, left, and right keyboard arrow keys to move players,
- * enter, and spacebar keys
+ * Take as its input an user's input
+ * among up, down, left, right, spacebar, and enter keys,
+ * and produce as its output the player's coordinates if the keys were arrow keys
+ * or a rock plantation if a spacebar
  */
 Player.prototype.handleInput = function(pressedKey) {
     switch(pressedKey) {
@@ -182,12 +170,10 @@ Player.prototype.handleInput = function(pressedKey) {
     if (pressedKey === 'spacebar' && gemPocket > 0) {
         allRocksTemp[gemPocket - 1].plant();
     }
+    // Make all the pop-ups but the gameover pop-up disappear on a handle input
     if (popup.name != 'gameover') {
-        console.log('thisthisthisthis');
         $(".popup").css("opacity", 0);
-    } //else {
-    //     $(".popup").css("opacity", 0.7);
-    // }
+    }
 };
 
 /**
@@ -220,7 +206,7 @@ Gem.prototype.update = function() {
         this.hide();
         level.rockGenerator();
     }
-    // Display the no. of earned rocks
+    // Display the number of rocks earned
     $(".num-rock").html(gemPocket);
 };
 
@@ -232,7 +218,7 @@ Gem.prototype.render = function() {
 };
 
 /**
- * Generate a rock off the canvas, the default position
+ * Generate a rock off the canvas for its default position
  * @class
  */
 var Rock = function() {
@@ -300,7 +286,6 @@ var Popup = function() {
     this.name = ''
     this.string = '';
     this.show = function() {
-        // $(".popup").css("width", "50%");
         $(".popup div").html(this.string);
         $(".popup").css("opacity", 0.7);
         // After 2.5 sec, pop-ups disappear automatically
@@ -309,55 +294,28 @@ var Popup = function() {
         }, 2500);
     };
     this.show_welcome = function() {
-        // $(".popup").css("width", "50%");
         $(".popup div").html(this.string);
         $(".popup").css("opacity", 0.8);
-        // Listen to arrow keys or spacebar pressed back up, and the welcome pop-up disappear
-        // $('html').bind('keyup', function(e) {
-        //     if (e.keyCode != 32 ||
-        //        e.keyCode != 37 ||
-        //        e.keyCode != 38 ||
-        //        e.keyCode != 39 ||
-        //        e.keyCode != 40) {
-        //         e.preventDefault();
-        //         return false;
-        //     } else {
-        //         $(".popup").css("opacity", 0);
-        //         return true;
-        //     }
-        // });
-        // $(document).keyup(function(e) {
-        //     if (e.keyCode == 32 ||
-        //         e.keyCode == 37 ||
-        //         e.keyCode == 38 ||
-        //         e.keyCode == 39 ||
-        //         e.keyCode == 40) {
-        //         $(".popup").css("opacity", 0);
-        //     }
-        // });
     };
+
     this.show_gameover = function() {
-        // $(".popup").css("width", "50%");
         $(".popup div").html(this.string);
         $(".popup").css("opacity", 0.8);
-
-        // Listen only to an 'enter' key pressed back up, and the gameover pop-up disappear and game restarts
+        // Listen only to an 'enter' key pressed back up, and reload the page to play it again
         $('html').bind('keydown', function(e) {
             if (e.keyCode != 13) {
                 e.preventDefault();
                 return false;
             } else {
-                $(".popup").css("opacity", 0);
                 location.reload();
             }
         });
-
-        // Listen to a tap on this, and reload the page to play again
+        // Disable the controller, and listen to a tap on the popup, and reload the page to play it again
+        $('.rectangle').unbind('click');
         $('.popup').on('click', function(e) {
             location.reload();
         })
     };
-
 };
 
 // Phrases for instructions, notifications, and gameover popups
@@ -368,12 +326,12 @@ Popup.prototype.tip_welcome = function() {
 
 Popup.prototype.tip_more_bug = function() {
     this.name = 'more_bug';
-    this.string = 'LOOK OUT! <span class="red">ONE MORE BUG</span> is coming!!';
+    this.string = 'You won! and LOOK OUT! \n <span class="red">ONE MORE BUG</span> is coming!!';
 };
 
 Popup.prototype.tip_faster_speed = function() {
     this.name = 'faster';
-    this.string = 'Now, THEY are getting <span class="red">FASTER!!</span>';
+    this.string = 'You won! and \n NOW, THEY are getting <span class="red">FASTER!!</span>';
 };
 
 Popup.prototype.tip_spacebar = function() {
@@ -402,12 +360,12 @@ var Level = function() {
     this.score = 0;
 
     // TODO: create other conditions under which another enemy instance gets generated or gets killed
+
     // Generate as many enemy instances as preset in this Level object having been leveled up
     this.enemyGenerator = function() {
         while (allEnemies.length < this.numberOfEnemies) {
             const enemy = new Enemy();
             allEnemies.push(enemy);
-            console.log('numberOfEnemies: ', this.numberOfEnemies);
             this.display();
         }
     };
@@ -436,9 +394,9 @@ var Level = function() {
 };
 
 /**
- * If leveled up, add up one level and score,
+ * If leveled up, add up one level and the score,
  * generate a new gem instance and a new enemy or speed,
- * and show pop-ups on each new start
+ * and show pop-ups on each new game
  */
 Level.prototype.up = function() {
     this.level++;
@@ -469,25 +427,6 @@ Level.prototype.up = function() {
     popup.show();
 };
 
-
-// var Controller1 = function() {
-//     this.x = player.x;
-//     this.y = player.y;
-//     this.sprite = 'images/controller.png';
-//     this.show = function() {
-//         $(".touch-controller").css()
-//         $(".popup div").css("width", "10em");
-// };
-
-// Controller.prototype.update = function() {
-
-// };
-
-// Controller.prototype.render = function() {
-
-// };
-
-
 // Instantiate objects, and initialize variables
 let gemPocket = 0;
 let highestSpeed = 0;
@@ -503,16 +442,8 @@ let rock = new Rock();
 popup.tip_welcome();
 popup.show_welcome();
 
-// player.controller();
-// let controller = new Controller();
-
-
-
-
-
-
-// Listen for key presses and send the keys to Player.handleInput() method.
-
+// Listen for key presses,
+// and pass the user's input as a parameter to Player.handleInput() method
 document.addEventListener('keydown', function(e) {
     var allowedKeys = {
         37: 'left',
@@ -527,7 +458,8 @@ document.addEventListener('keydown', function(e) {
     player.handleInput(allowedKeys[e.keyCode]);
 });
 
-
+// Listen for a touch or a click on the controller,
+// and pass the user's input as a parameter to Player.handleInput() method
 $('.rectangle1').on("click", function(event) {
     player.handleInput('left');
 });
@@ -540,7 +472,6 @@ $('.rectangle3').on("click", function(event) {
 $('.rectangle4').on("click", function(event) {
     player.handleInput('right');
 });
-
 $(".rock-button-controller").on("click", function(event) {
     player.previousX = 0;
     player.previousY = 0;

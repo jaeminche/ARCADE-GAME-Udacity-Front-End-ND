@@ -1,6 +1,5 @@
 html {
     background-color: black;
-    /*margin: auto;*/
 }
 
 body {
@@ -49,8 +48,6 @@ body {
     background-size: 2.5em;
     background-position: right 1em bottom 1.5em;
 }
-
-
 
 .stat-num {
     color: yellow;

@@ -148,20 +148,20 @@ Player.prototype.render = function() {
 Player.prototype.handleInput = function(pressedKey) {
     switch(pressedKey) {
         case 'up':
-            player.y -= 83;
-            player.previousY = -83;
+            this.y -= 83;
+            this.previousY = -83;
             break;
         case 'down':
-            player.y += 83;
-            player.previousY = 83;
+            this.y += 83;
+            this.previousY = 83;
             break;
         case 'left':
-            player.x -= 101;
-            player.previousX = -101;
+            this.x -= 101;
+            this.previousX = -101;
             break;
         case 'right':
-            player.x += 101;
-            player.previousX = 101;
+            this.x += 101;
+            this.previousX = 101;
             break;
         case 'enter':
             break;

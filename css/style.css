@@ -9,6 +9,11 @@ body {
     font-family: 'Press Start 2P', cursive;
 }
 
+canvas {
+    margin-top: -3em;
+}
+
+/*logo*/
 #logo {
     background: url(../images/frogger-logo.png);
     background-repeat: no-repeat;
@@ -18,6 +23,7 @@ body {
     margin: auto;
 }
 
+/*stat-display*/
 .stat-container {
     margin-top: 1.5em;
     margin: auto;
@@ -57,30 +63,11 @@ body {
     color: red;
 }
 
-canvas {
-    /*position: absolute;*/
-    margin-top: -3em;
-    /*z-index: 1;*/
-}
-
-
-
-
-
-
- /*Generate pop-ups' style*/
+ /*pop-ups' style*/
 .popup {
     margin: 0 auto;
     padding-top: 2%;
-/*    position: relative;
-    width: 20%;
-    left: 40%;*/
-    /*top:-50em;*/
-    /*margin-left:1em;*/
-    /*margin-top: 70%;*/
-    /*height: 100vmin;*/
     opacity:0.7;
-    /*z-index: 2;*/
     transition:all 1s;
     -webkit-transition:all 1s;
 }
@@ -107,7 +94,7 @@ canvas {
 }
 
 
-
+/*controller's style*/
 .fix-controller {
     display: flex;
     flex-direction: row;
@@ -133,7 +120,6 @@ canvas {
     border-radius: 50%;
     background: white;
 }
-
 
 .rectangle {
     width: 3.5em;
@@ -365,5 +351,3 @@ canvas {
         justify-content: space-between;
     }
 }
-
-

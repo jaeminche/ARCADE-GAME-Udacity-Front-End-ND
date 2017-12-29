@@ -8,10 +8,10 @@ I created a classic arcade game with provided visual assets and a game loop engi
 
 ## Table of Contents
 
-* [Getting Started](##Getting_Started)
-* [How to Play](##How_to_Play)
-* [Features](##features)
-* [Contributing](##Contributing)
+* [Getting Started](#Getting-Started)
+* [How to Play](#How-to-Play)
+* [Basic Features](#basic-features)
+* [Contributing](#Contributing)
 
 ## Getting Started
 

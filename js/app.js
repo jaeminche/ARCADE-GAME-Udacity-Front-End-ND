@@ -9,6 +9,7 @@
 // - Add pause button
 // - Add a combo bonus for three-serial gems collected
 
+
 const allEnemies = [];
 
 /**
@@ -108,8 +109,8 @@ Enemy.prototype.update = function(dt) {
        player.y < this.y + 25 &&
        30 + player.y > this.y) {
         gemPocket--;
-        player.x = 3 * 101;
-        player.y = 574;
+        player.x = initPos.PLAYER_X;
+        player.y = initPos.PLAYER_Y;
         // if the player runs out of gems, she/he loses,
         // and show a gameover message pop-up
         if (gemPocket === -1) {
@@ -223,7 +224,6 @@ var Gem = function(x, y) {
 
 Gem.prototype = Object.create( Entities.prototype );
 Gem.prototype.constructor = Gem;
-
 
 /**
  * Update the gem's appearance depending on its being collected
@@ -467,10 +467,6 @@ let gem = new Gem(getRandomNum(initPos.GEM_X), getRandomNum(initPos.GEM_Y));
 let rock = new Rock(initPos.ROCK_X, initPos.ROCK_Y);
 popup.tip_welcome();
 popup.show_welcome();
-
-
-
-
 
 // Listen for key presses,
 // and pass the user's input as a parameter to Player.handleInput() method

@@ -12,7 +12,7 @@ I created a classic arcade game with provided visual assets and a game loop engi
 * [Getting Started](#Getting-Started)
 * [How to Play](#How-to-Play)
 * [Basic Features](#basic-features)
-* [To see the given instruction from Udacity](#to-see-the-given-instruction-from-udacity)
+* [To See the Instruction Given by Udacity](#to-see-the-given-instruction-from-udacity)
 * [Contributing](#Contributing)
 
 ## Skills Implemented
@@ -83,7 +83,7 @@ The game includes following features including interactivity:
 	8. Vehicle-player collision resets the game.
 	9. Device-responsive design
 
-## To see the given instruction from Udacity
+## To See the Instruction Given by Udacity
 
 If you want to see what's been provided from Udacity and what's not, refer to https://docs.google.com/document/d/1v01aScPjSWCCWQLIpFqvg3-vXLH2e8_SZQKC8jNO0Dc/pub?embedded=true
 

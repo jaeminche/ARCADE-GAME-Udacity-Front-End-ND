@@ -8,11 +8,19 @@ I created a classic arcade game with provided visual assets and a game loop engi
 
 ## Table of Contents
 
+* [Skills Implemented](#Skills-Implemented)
 * [Getting Started](#Getting-Started)
 * [How to Play](#How-to-Play)
 * [Basic Features](#basic-features)
 * [To see the given instruction from Udacity](#to-see-the-given-instruction-from-udacity)
 * [Contributing](#Contributing)
+
+## Skills Implemented
+
+* JavaScript Object-Oriented Programming
+* Prototypal Classes
+* Pseudoclassical Subclassing (Prototypal Inheritance)
+* HTML Canvas
 
 ## Getting Started
 

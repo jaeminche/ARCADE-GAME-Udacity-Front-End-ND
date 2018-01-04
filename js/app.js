@@ -1,5 +1,5 @@
 /**
- * @file overview Classic Arcade Game Clone project for Udacity's FEND.
+ * @file overview Classic Arcade Game Clone project for Udacity's Front-end NanoDegree.
  * @author Jae M. Choi <jaeminche@gmail.com>
  */
 
@@ -9,12 +9,25 @@
 // - Add pause button
 // - Add a combo bonus for three-serial gems collected
 
+/**
+ * Generate a parent class for entities
+ * @class
+ */
+var Entities = function() {
+    // Draw the entities on the canvas
+    this.render = function() {
+        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+    };
+};
 
 /**
  * Generate an instance of Enemies
  * @class
  */
 var Enemy = function() {
+    // Inherit a rendering method from its parent class, Entities
+    Entities.call(this);
+
     // Set the enemy's default position with an x coordinate and a randomly generated y coordinate from initPosY array
     const initPosX = -120;
     const initPosY = [62, 145, 229, 312, 395];
@@ -41,6 +54,9 @@ var Enemy = function() {
         this.speed = Math.floor(Math.random() * (150 + acceleration)) + 30;
     };
 };
+
+Enemy.prototype = Object.create( Entities.prototype );
+Enemy.prototype.constructor = Enemy;
 
 /**
  * Update the enemy's position
@@ -80,17 +96,13 @@ Enemy.prototype.update = function(dt) {
 };
 
 /**
- * Draw the enemy on the canvas
- */
-Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
-
-/**
  * Generate a player with x & y coodinates for the default position and ones for a previous move
  * @class
  */
 var Player = function() {
+    // Inherit a rendering method from its parent class, Entities
+    Entities.call(this);
+
     this.sprite = 'images/char-boy.png';
     this.x = 3 * 101;
     this.y = 574; // 7 * 82;
@@ -98,11 +110,13 @@ var Player = function() {
     this.previousY = 0;
 };
 
+Player.prototype = Object.create( Entities.prototype );
+Player.prototype.constructor = Player;
+
 /**
  * Update player's position
  */
 Player.prototype.update = function() {
-    // player.controller();
     // If player wins(reaches the water):
     if (this.y < 0) {
         // Take instances of planted rocks out of allRocksTemp array(out of canvas),
@@ -130,13 +144,6 @@ Player.prototype.update = function() {
     if (this.x > 707) {
         this.x -= 101;
     }
-};
-
-/**
- * Draw the player on the canvas
- */
-Player.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 /**
@@ -181,6 +188,9 @@ Player.prototype.handleInput = function(pressedKey) {
  * @class
  */
 var Gem = function() {
+    // Inherit a rendering method from its parent class, Entities
+    Entities.call(this);
+
     const initPosX = [0, 101, 202, 303, 404, 505, 606, 707];
     const initPosY = [62, 145, 229, 312, 395];
     this.x = initPosX[Math.floor(Math.random() * initPosX.length)];
@@ -190,6 +200,10 @@ var Gem = function() {
         gem.x = undefined;
     };
 };
+
+Gem.prototype = Object.create( Entities.prototype );
+Gem.prototype.constructor = Gem;
+
 
 /**
  * Update the gem's appearance depending on its being collected
@@ -211,23 +225,22 @@ Gem.prototype.update = function() {
 };
 
 /**
- * Draw the gem on the canvas
- */
-Gem.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
-
-/**
  * Generate a rock off the canvas for its default position
  * @class
  */
 var Rock = function() {
+    // Inherit a rendering method from its parent class, Entities
+    Entities.call(this);
+
     this.x = - 101;
     this.y = - 100;
     this.sprite = 'images/rock.png';
     this.detected = 0;
     this.planted = false;
 };
+
+Rock.prototype = Object.create( Entities.prototype );
+Rock.prototype.constructor = Rock;
 
 /**
  * Plant a rock on the left spot of the player
@@ -269,13 +282,6 @@ Rock.prototype.update = function() {
         player.y = player.y - player.previousY;
     }
 
-};
-
-/**
- * Draw the rock on the canvas
- */
-Rock.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 /**
@@ -441,6 +447,10 @@ let gem = new Gem();
 let rock = new Rock();
 popup.tip_welcome();
 popup.show_welcome();
+
+
+
+
 
 // Listen for key presses,
 // and pass the user's input as a parameter to Player.handleInput() method

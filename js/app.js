@@ -9,11 +9,38 @@
 // - Add pause button
 // - Add a combo bonus for three-serial gems collected
 
+const allEnemies = [];
+
+/**
+ * @constant {number} Entities's default position
+ * @default
+ */
+var initPos = {
+    ENEMY_X : -120,
+    ENEMY_Y : [62, 145, 229, 312, 395],
+    PLAYER_X : 3 * 101,
+    PLAYER_Y : 574, // 7 * 82
+    GEM_X : [0, 101, 202, 303, 404, 505, 606, 707],
+    GEM_Y : [62, 145, 229, 312, 395],
+    ROCK_X : - 101,
+    ROCK_Y : - 100
+};
+
+/**
+ * Returns a random number out of an array
+ * @param {number} array - entities' default coordinates options
+ */
+var getRandomNum = function(array) {
+    return array[Math.floor(Math.random() * array.length)];
+};
+
 /**
  * Generate a parent class for entities
  * @class
  */
-var Entities = function() {
+var Entities = function(x, y) {
+    this.x = x;
+    this.y = y;
     // Draw the entities on the canvas
     this.render = function() {
         ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
@@ -24,16 +51,13 @@ var Entities = function() {
  * Generate an instance of Enemies
  * @class
  */
-var Enemy = function() {
-    // Inherit a rendering method from its parent class, Entities
-    Entities.call(this);
+var Enemy = function(x, y) {
+    // Inherit the rendering method and
+    // initial x and y coordinates from its parent class, Entities
+    Entities.call(this, x, y);
 
-    // Set the enemy's default position with an x coordinate and a randomly generated y coordinate from initPosY array
-    const initPosX = -120;
-    const initPosY = [62, 145, 229, 312, 395];
     let acceleration = 0;
-    this.x = initPosX;
-    this.y = initPosY[Math.floor(Math.random() * initPosY.length)];
+
     // Set the enemy's speed with a max speed at 150 and a min speed at 30
     this.speed = Math.floor(Math.random() * 150) + 30;
     // Sets the enemy's image
@@ -42,8 +66,8 @@ var Enemy = function() {
      * Reset enemy at the default position with a randomly generated Y coordinate
      */
     this.reposition = function() {
-        this.x = initPosX;
-        this.y = initPosY[Math.floor(Math.random() * initPosY.length)];
+        this.x = initPos.ENEMY_X;
+        this.y = getRandomNum(initPos.ENEMY_Y);
     };
     /**
      * Add up some speed to the max speed
@@ -99,13 +123,12 @@ Enemy.prototype.update = function(dt) {
  * Generate a player with x & y coodinates for the default position and ones for a previous move
  * @class
  */
-var Player = function() {
-    // Inherit a rendering method from its parent class, Entities
-    Entities.call(this);
+var Player = function(x, y) {
+    // Inherit the rendering method and
+    // default x and y coordinates from its parent class, Entities
+    Entities.call(this, x, y);
 
     this.sprite = 'images/char-boy.png';
-    this.x = 3 * 101;
-    this.y = 574; // 7 * 82;
     this.previousX = 0;
     this.previousY = 0;
 };
@@ -128,8 +151,8 @@ Player.prototype.update = function() {
         }
 
         // Set the player on the default position, and set the level up
-        this.x = 3 * 101;
-        this.y = 574;
+        this.x = initPos.PLAYER_X;
+        this.y = initPos.PLAYER_Y;
         level.up();
         level.display();
     }
@@ -187,14 +210,11 @@ Player.prototype.handleInput = function(pressedKey) {
  * Generate a gem at a random position and can hide it
  * @class
  */
-var Gem = function() {
-    // Inherit a rendering method from its parent class, Entities
-    Entities.call(this);
+var Gem = function(x, y) {
+    // Inherit the rendering method and
+    // initial x and y coordinates from its parent class, Entities
+    Entities.call(this, x, y);
 
-    const initPosX = [0, 101, 202, 303, 404, 505, 606, 707];
-    const initPosY = [62, 145, 229, 312, 395];
-    this.x = initPosX[Math.floor(Math.random() * initPosX.length)];
-    this.y = initPosY[Math.floor(Math.random() * initPosY.length)];
     this.sprite = 'images/gem-orange.png';
     this.hide = function() {
         gem.x = undefined;
@@ -228,12 +248,11 @@ Gem.prototype.update = function() {
  * Generate a rock off the canvas for its default position
  * @class
  */
-var Rock = function() {
-    // Inherit a rendering method from its parent class, Entities
-    Entities.call(this);
+var Rock = function(x, y) {
+    // Inherit the rendering method and
+    // initial x and y coordinates from its parent class, Entities
+    Entities.call(this, x, y);
 
-    this.x = - 101;
-    this.y = - 100;
     this.sprite = 'images/rock.png';
     this.detected = 0;
     this.planted = false;
@@ -367,10 +386,12 @@ var Level = function() {
 
     // TODO: create other conditions under which another enemy instance gets generated or gets killed
 
-    // Generate as many enemy instances as preset in this Level object having been leveled up
+    // Generate as many enemy instances as it's set for each Level object having been leveled up
     this.enemyGenerator = function() {
         while (allEnemies.length < this.numberOfEnemies) {
-            const enemy = new Enemy();
+            // Create an enemy instance with its default position
+            // on an x and a randomly generated y coordinates
+            const enemy = new Enemy(initPos.ENEMY_X, getRandomNum(initPos.ENEMY_Y));
             allEnemies.push(enemy);
             this.display();
         }
@@ -378,7 +399,7 @@ var Level = function() {
 
     // Generate and push a rock instance into 'allRocksTemp' array
     this.rockGenerator = function() {
-        const rock = new Rock();
+        const rock = new Rock(initPos.ROCK_X, initPos.ROCK_Y);
         allRocksTemp.push(rock);
     };
 
@@ -408,7 +429,7 @@ Level.prototype.up = function() {
     this.level++;
     this.score += this.numberOfEnemies * highestSpeed;
     $(".score").html(this.score);
-    gem = new Gem();
+    gem = new Gem(getRandomNum(initPos.GEM_X), getRandomNum(initPos.GEM_Y));
     if (this.numberOfEnemies < 7) { // only if under 7 enemies, add an enemy
         this.numberOfEnemies++;
     } else { // if over 7 enemies, accelerate enemies's speed
@@ -436,15 +457,14 @@ Level.prototype.up = function() {
 // Instantiate objects, and initialize variables
 let gemPocket = 0;
 let highestSpeed = 0;
-const allEnemies = [];
 const level = new Level();
 level.enemyGenerator();
 const allRocksTemp = [];
-const player = new Player();
+const player = new Player(initPos.PLAYER_X, initPos.PLAYER_Y);
 level.display();
 const popup = new Popup();
-let gem = new Gem();
-let rock = new Rock();
+let gem = new Gem(getRandomNum(initPos.GEM_X), getRandomNum(initPos.GEM_Y));
+let rock = new Rock(initPos.ROCK_X, initPos.ROCK_Y);
 popup.tip_welcome();
 popup.show_welcome();
 

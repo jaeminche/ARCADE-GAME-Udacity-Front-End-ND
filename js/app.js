@@ -308,7 +308,7 @@ Rock.prototype.update = function() {
  * @class
  */
 var Popup = function() {
-    this.name = ''
+    this.name = '';
     this.string = '';
     this.show = function() {
         $(".popup div").html(this.string);
@@ -339,7 +339,7 @@ var Popup = function() {
         $('.rectangle').unbind('click');
         $('.popup').on('click', function(e) {
             location.reload();
-        })
+        });
     };
 };
 

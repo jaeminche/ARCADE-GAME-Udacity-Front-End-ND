@@ -1,3 +1,5 @@
+"use strict";
+
 /**
  * @file overview Classic Arcade Game Clone project for Udacity's Front-end NanoDegree.
  * @author Jae M. Choi <jaeminche@gmail.com>
@@ -42,10 +44,13 @@ var getRandomNum = function(array) {
 var Entities = function(x, y) {
     this.x = x;
     this.y = y;
-    // Draw the entities on the canvas
-    this.render = function() {
-        ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-    };
+};
+
+/**
+ * Draw the entities on the canvas
+ */
+Entities.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 /**
@@ -57,31 +62,32 @@ var Enemy = function(x, y) {
     // initial x and y coordinates from its parent class, Entities
     Entities.call(this, x, y);
 
-    let acceleration = 0;
-
     // Set the enemy's speed with a max speed at 150 and a min speed at 30
     this.speed = Math.floor(Math.random() * 150) + 30;
+    // Set the enemy's acceleration
+    this.acceleration = 0;
     // Sets the enemy's image
     this.sprite = 'images/enemy-bug.png';
-    /**
-     * Reset enemy at the default position with a randomly generated Y coordinate
-     */
-    this.reposition = function() {
-        this.x = initPos.ENEMY_X;
-        this.y = getRandomNum(initPos.ENEMY_Y);
-    };
-    /**
-     * Add up some speed to the max speed
-     * @param {number} acceleration speed - triggered if leveled up
-     */
-    this.acceleration = function(accelerate) {
-        acceleration += accelerate;
-        this.speed = Math.floor(Math.random() * (150 + acceleration)) + 30;
-    };
 };
 
 Enemy.prototype = Object.create( Entities.prototype );
 Enemy.prototype.constructor = Enemy;
+
+/**
+ * Reset enemy at the default position with a randomly generated Y coordinate
+ */
+Enemy.prototype.reposition = function() {
+    this.x = initPos.ENEMY_X;
+    this.y = getRandomNum(initPos.ENEMY_Y);
+};
+/**
+ * Add up some speed to the max speed
+ * @param {number} numOfAcceleration - triggered if leveled up
+ */
+Enemy.prototype.accelerate = function(numOfAcceleration) {
+    this.acceleration += numOfAcceleration;
+    this.speed = Math.floor(Math.random() * (150 + this.acceleration)) + 30;
+};
 
 /**
  * Update the enemy's position
@@ -144,7 +150,7 @@ Player.prototype.update = function() {
     // If player wins(reaches the water):
     if (this.y < 0) {
         // Take instances of planted rocks out of allRocksTemp array(out of canvas),
-        for (rock of allRocksTemp) {
+        for (let rock of allRocksTemp) {
             if (rock.planted === true) {
                 let index = allRocksTemp.indexOf(rock);
                 allRocksTemp.splice(index, 1);
@@ -217,13 +223,15 @@ var Gem = function(x, y) {
     Entities.call(this, x, y);
 
     this.sprite = 'images/gem-orange.png';
-    this.hide = function() {
-        gem.x = undefined;
-    };
+
 };
 
 Gem.prototype = Object.create( Entities.prototype );
 Gem.prototype.constructor = Gem;
+
+Gem.prototype.hide = function() {
+    gem.x = undefined;
+};
 
 /**
  * Update the gem's appearance depending on its being collected
@@ -278,7 +286,7 @@ Rock.prototype.plant = function() {
  */
 Rock.prototype.update = function() {
     // Detect collision with enemies, and slide the enemies down
-    for (enemy of allEnemies) {
+    for (let enemy of allEnemies) {
         if (enemy.x < this.x + 80 &&
            enemy.x + 70 > this.x &&
            enemy.y < this.y + 25 &&
@@ -310,37 +318,39 @@ Rock.prototype.update = function() {
 var Popup = function() {
     this.name = '';
     this.string = '';
-    this.show = function() {
-        $(".popup div").html(this.string);
-        $(".popup").css("opacity", 0.7);
-        // After 2.5 sec, pop-ups disappear automatically
-        setTimeout(function() {
-            $(".popup").css("opacity", 0);
-        }, 2500);
-    };
-    this.show_welcome = function() {
-        $(".popup div").html(this.string);
-        $(".popup").css("opacity", 0.8);
-    };
+};
 
-    this.show_gameover = function() {
-        $(".popup div").html(this.string);
-        $(".popup").css("opacity", 0.8);
-        // Listen only to an 'enter' key pressed back up, and reload the page to play it again
-        $('html').bind('keydown', function(e) {
-            if (e.keyCode != 13) {
-                e.preventDefault();
-                return false;
-            } else {
-                location.reload();
-            }
-        });
-        // Disable the controller, and listen to a tap on the popup, and reload the page to play it again
-        $('.rectangle').unbind('click');
-        $('.popup').on('click', function(e) {
+Popup.prototype.show = function() {
+    $(".popup div").html(this.string);
+    $(".popup").css("opacity", 0.7);
+    // After 2.5 sec, pop-ups disappear automatically
+    setTimeout(function() {
+        $(".popup").css("opacity", 0);
+    }, 2500);
+};
+
+Popup.prototype.show_welcome = function() {
+    $(".popup div").html(this.string);
+    $(".popup").css("opacity", 0.8);
+};
+
+Popup.prototype.show_gameover = function() {
+    $(".popup div").html(this.string);
+    $(".popup").css("opacity", 0.8);
+    // Listen only to an 'enter' key pressed back up, and reload the page to play it again
+    $('html').bind('keydown', function(e) {
+        if (e.keyCode != 13) {
+            e.preventDefault();
+            return false;
+        } else {
             location.reload();
-        });
-    };
+        }
+    });
+    // Disable the controller, and listen to a tap on the popup, and reload the page to play it again
+    $('.rectangle').unbind('click');
+    $('.popup').on('click', function(e) {
+        location.reload();
+    });
 };
 
 // Phrases for instructions, notifications, and gameover popups
@@ -383,42 +393,43 @@ var Level = function() {
     this.level = 1;
     this.numberOfEnemies = 2;
     this.score = 0;
-
-    // TODO: create other conditions under which another enemy instance gets generated or gets killed
-
-    // Generate as many enemy instances as it's set for each Level object having been leveled up
-    this.enemyGenerator = function() {
-        while (allEnemies.length < this.numberOfEnemies) {
-            // Create an enemy instance with its default position
-            // on an x and a randomly generated y coordinates
-            const enemy = new Enemy(initPos.ENEMY_X, getRandomNum(initPos.ENEMY_Y));
-            allEnemies.push(enemy);
-            this.display();
-        }
-    };
-
-    // Generate and push a rock instance into 'allRocksTemp' array
-    this.rockGenerator = function() {
-        const rock = new Rock(initPos.ROCK_X, initPos.ROCK_Y);
-        allRocksTemp.push(rock);
-    };
-
-    // Display data on the panel
-    this.display = function() {
-        $(".level").html(this.level);
-        $(".numBugs").html(this.numberOfEnemies);
-        const enemiesSpeeds = [];
-        for (enemy of allEnemies) {
-            enemiesSpeeds.push(enemy.speed);
-        }
-        // display the highest speed of the fasted bug generated
-        function getMaxSpeed(numArray) {
-            return Math.max.apply(null, numArray);
-        }
-        highestSpeed = getMaxSpeed(enemiesSpeeds);
-        $(".highestSpeed").html(highestSpeed);
-    };
 };
+
+// TODO: create other conditions under which another enemy instance gets generated or gets killed
+
+// Generate as many enemy instances as it's set for each Level object having been leveled up
+Level.prototype.enemyGenerator = function() {
+    while (allEnemies.length < this.numberOfEnemies) {
+        // Create an enemy instance with its default position
+        // on an x and a randomly generated y coordinates
+        const enemy = new Enemy(initPos.ENEMY_X, getRandomNum(initPos.ENEMY_Y));
+        allEnemies.push(enemy);
+        this.display();
+    }
+};
+
+// Generate and push a rock instance into 'allRocksTemp' array
+Level.prototype.rockGenerator = function() {
+    const rock = new Rock(initPos.ROCK_X, initPos.ROCK_Y);
+    allRocksTemp.push(rock);
+};
+
+// Display data on the panel
+Level.prototype.display = function() {
+    $(".level").html(this.level);
+    $(".numBugs").html(this.numberOfEnemies);
+    const enemiesSpeeds = [];
+    for (let enemy of allEnemies) {
+        enemiesSpeeds.push(enemy.speed);
+    }
+    // display the highest speed of the fasted bug generated
+    function getMaxSpeed(numArray) {
+        return Math.max.apply(null, numArray);
+    }
+    highestSpeed = getMaxSpeed(enemiesSpeeds);
+    $(".highestSpeed").html(highestSpeed);
+};
+
 
 /**
  * If leveled up, add up one level and the score,
@@ -433,8 +444,8 @@ Level.prototype.up = function() {
     if (this.numberOfEnemies < 7) { // only if under 7 enemies, add an enemy
         this.numberOfEnemies++;
     } else { // if over 7 enemies, accelerate enemies's speed
-        for (enemy of allEnemies) {
-            enemy.acceleration(40);
+        for (let enemy of allEnemies) {
+            enemy.accelerate(40);
         }
     }
     // Show a notification pop-up in accordance of level numbers

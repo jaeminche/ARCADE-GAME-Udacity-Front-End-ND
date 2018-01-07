@@ -120,8 +120,11 @@ Enemy.prototype.update = function(dt) {
         // if the player runs out of gems, she/he loses,
         // and show a gameover message pop-up
         if (gemPocket === -1) {
-            popup.gameover();
-            popup.show_gameover();
+            popup.setContent(popupContents.GAMEOVER);
+            popup.show(0.8, false, true);
+            // const gameoverPop = new GameOverPopup(popupContents.GAMEOVER, 0.8);
+            // gameoverPop.show();
+            // gameoverPop.freeze_listen();
         }
     }
 };
@@ -311,77 +314,55 @@ Rock.prototype.update = function() {
 
 };
 
+// Phrases for instructions, notifications, and gameover popups
+var popupContents = {
+    WELCOME : 'INSTRUCTIONS: Get some <span class="yellow">GEMS</span>, Block the bugs using <span class="red">SPACEBAR</span>, and Get to the water using <span class="red">ARROW KEYS</span> to win!!',
+    TIP_MORE_BUG : 'You won! and LOOK OUT! \n <span class="red">ONE MORE BUG</span> is coming!!',
+    TIP_FASTER_SPEED : 'You won! and \n NOW, THEY are getting <span class="red">FASTER!!</span>',
+    TIP_SPACEBAR : 'Tip : Get <span class="yellow">GEMS</span>, and press <span class="red">SPACEBAR</span> to block the bugs!',
+    TIP_ROCKS : 'Tip : <span class="yellow">Rocks</span> can block <span class="red">two bugs!</span>',
+    GAMEOVER : '<span class="red">- GAMEOVER -</span> \n Press <span class="yellow">ENTER</span> or touch <span class="yellow">this</span> to play again!'
+};
+
 /**
  * Generate pop-ups
  * @class
  */
-var Popup = function() {
-    this.name = '';
-    this.string = '';
+var Popup = function(content) {
+    this.content = content;
 };
 
-Popup.prototype.show = function() {
-    $(".popup div").html(this.string);
-    $(".popup").css("opacity", 0.7);
-    // After 2.5 sec, pop-ups disappear automatically
-    setTimeout(function() {
-        $(".popup").css("opacity", 0);
-    }, 2500);
+Popup.prototype.setContent = function(content) {
+    this.content = content;
 };
 
-Popup.prototype.show_welcome = function() {
-    $(".popup div").html(this.string);
-    $(".popup").css("opacity", 0.8);
-};
+Popup.prototype.show = function(opacityNum, autoHide, freeze_listen) {
+    $(".popup div").html(this.content);
+    $(".popup").css("opacity", opacityNum);
 
-Popup.prototype.show_gameover = function() {
-    $(".popup div").html(this.string);
-    $(".popup").css("opacity", 0.8);
-    // Listen only to an 'enter' key pressed back up, and reload the page to play it again
-    $('html').bind('keydown', function(e) {
-        if (e.keyCode != 13) {
-            e.preventDefault();
-            return false;
-        } else {
+    if (autoHide) {
+        // After 2.5 sec, pop-ups disappear automatically
+        setTimeout(function() {
+            $(".popup").css("opacity", 0);
+        }, 2500);
+    }
+
+    if (freeze_listen) {
+        // Listen only to an 'enter' key pressed back up, and reload the page to play it again
+        $('html').bind('keydown', function(e) {
+            if (e.keyCode != 13) {
+                e.preventDefault();
+                return false;
+            } else {
+                location.reload();
+            }
+        });
+        // Disable the controller, and listen to a tap on the popup, and reload the page to play it again
+        $('.rectangle').unbind('click');
+        $('.popup').on('click', function(e) {
             location.reload();
-        }
-    });
-    // Disable the controller, and listen to a tap on the popup, and reload the page to play it again
-    $('.rectangle').unbind('click');
-    $('.popup').on('click', function(e) {
-        location.reload();
-    });
-};
-
-// Phrases for instructions, notifications, and gameover popups
-Popup.prototype.tip_welcome = function() {
-    this.name = 'welcome';
-    this.string = 'INSTRUCTIONS: Get some <span class="yellow">GEMS</span>, Block the bugs using <span class="red">SPACEBAR</span>, and Get to the water using <span class="red">ARROW KEYS</span> to win!!';
-};
-
-Popup.prototype.tip_more_bug = function() {
-    this.name = 'more_bug';
-    this.string = 'You won! and LOOK OUT! \n <span class="red">ONE MORE BUG</span> is coming!!';
-};
-
-Popup.prototype.tip_faster_speed = function() {
-    this.name = 'faster';
-    this.string = 'You won! and \n NOW, THEY are getting <span class="red">FASTER!!</span>';
-};
-
-Popup.prototype.tip_spacebar = function() {
-    this.name = 'tip_spacebar';
-    this.string = 'Tip : Get <span class="yellow">GEMS</span>, and press <span class="red">SPACEBAR</span> to block the bugs!';
-};
-
-Popup.prototype.tip_rocks = function() {
-    this.name = 'tip_rocks';
-    this.string = 'Tip : <span class="yellow">Rocks</span> can block <span class="red">two bugs!</span>';
-};
-
-Popup.prototype.gameover = function() {
-    this.name = 'gameover';
-    this.string = '<span class="red">- GAMEOVER -</span> \n Press <span class="yellow">ENTER</span> or touch <span class="yellow">this</span> to play again!';
+        });
+    }
 };
 
 /**
@@ -451,18 +432,18 @@ Level.prototype.up = function() {
     // Show a notification pop-up in accordance of level numbers
     switch (true) {
         case this.level % 5 == 0:
-            popup.tip_rocks();
+            popup.setContent(popupContents.TIP_ROCKS);
             break;
         case this.level % 3 == 0:
-            popup.tip_spacebar();
+            popup.setContent(popupContents.TIP_SPACEBAR);
             break;
         case this.level < 7:
-            popup.tip_more_bug();
+            popup.setContent(popupContents.TIP_MORE_BUG);
             break;
         default:
-            popup.tip_faster_speed();
+            popup.setContent(popupContents.TIP_FASTER_SPEED);
     }
-    popup.show();
+    popup.show(0.7, true, false);
 };
 
 // Instantiate objects, and initialize variables
@@ -473,11 +454,10 @@ level.enemyGenerator();
 const allRocksTemp = [];
 const player = new Player(initPos.PLAYER_X, initPos.PLAYER_Y);
 level.display();
-const popup = new Popup();
 let gem = new Gem(getRandomNum(initPos.GEM_X), getRandomNum(initPos.GEM_Y));
 let rock = new Rock(initPos.ROCK_X, initPos.ROCK_Y);
-popup.tip_welcome();
-popup.show_welcome();
+const popup = new Popup(popupContents.WELCOME);
+popup.show(0.8, false, false);
 
 // Listen for key presses,
 // and pass the user's input as a parameter to Player.handleInput() method

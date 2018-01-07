@@ -1,3 +1,4 @@
+// Whole-script strict mode syntax
 "use strict";
 
 /**
@@ -27,6 +28,16 @@ var initPos = {
     GEM_Y : [62, 145, 229, 312, 395],
     ROCK_X : - 101,
     ROCK_Y : - 100
+};
+
+// Phrases for instructions, notifications, and gameover popups
+var popupContents = {
+    WELCOME : 'INSTRUCTIONS: Get some <span class="yellow">GEMS</span>, Block the bugs using <span class="red">SPACEBAR</span>, and Get to the water using <span class="red">ARROW KEYS</span> to win!!',
+    TIP_MORE_BUG : 'You won! and LOOK OUT! \n <span class="red">ONE MORE BUG</span> is coming!!',
+    TIP_FASTER_SPEED : 'You won! and \n NOW, THEY are getting <span class="red">FASTER!!</span>',
+    TIP_SPACEBAR : 'Tip : Get <span class="yellow">GEMS</span>, and press <span class="red">SPACEBAR</span> to block the bugs!',
+    TIP_ROCKS : 'Tip : <span class="yellow">Rocks</span> can block <span class="red">two bugs!</span>',
+    GAMEOVER : '<span class="red">- GAMEOVER -</span> \n Press <span class="yellow">ENTER</span> or touch <span class="yellow">this</span> to play again!'
 };
 
 /**
@@ -121,10 +132,8 @@ Enemy.prototype.update = function(dt) {
         // and show a gameover message pop-up
         if (gemPocket === -1) {
             popup.setContent(popupContents.GAMEOVER);
+            // Pass parameters for opacity, autoHide, freeze_listen
             popup.show(0.8, false, true);
-            // const gameoverPop = new GameOverPopup(popupContents.GAMEOVER, 0.8);
-            // gameoverPop.show();
-            // gameoverPop.freeze_listen();
         }
     }
 };
@@ -314,16 +323,6 @@ Rock.prototype.update = function() {
 
 };
 
-// Phrases for instructions, notifications, and gameover popups
-var popupContents = {
-    WELCOME : 'INSTRUCTIONS: Get some <span class="yellow">GEMS</span>, Block the bugs using <span class="red">SPACEBAR</span>, and Get to the water using <span class="red">ARROW KEYS</span> to win!!',
-    TIP_MORE_BUG : 'You won! and LOOK OUT! \n <span class="red">ONE MORE BUG</span> is coming!!',
-    TIP_FASTER_SPEED : 'You won! and \n NOW, THEY are getting <span class="red">FASTER!!</span>',
-    TIP_SPACEBAR : 'Tip : Get <span class="yellow">GEMS</span>, and press <span class="red">SPACEBAR</span> to block the bugs!',
-    TIP_ROCKS : 'Tip : <span class="yellow">Rocks</span> can block <span class="red">two bugs!</span>',
-    GAMEOVER : '<span class="red">- GAMEOVER -</span> \n Press <span class="yellow">ENTER</span> or touch <span class="yellow">this</span> to play again!'
-};
-
 /**
  * Generate pop-ups
  * @class
@@ -336,6 +335,9 @@ Popup.prototype.setContent = function(content) {
     this.content = content;
 };
 
+/**
+ * @param {number, boolean, boolean} - opacity, autoHide, freeze_listen
+ */
 Popup.prototype.show = function(opacityNum, autoHide, freeze_listen) {
     $(".popup div").html(this.content);
     $(".popup").css("opacity", opacityNum);
@@ -443,6 +445,7 @@ Level.prototype.up = function() {
         default:
             popup.setContent(popupContents.TIP_FASTER_SPEED);
     }
+    // Pass parameters for opacity, autoHide, freeze_listen
     popup.show(0.7, true, false);
 };
 
@@ -457,6 +460,7 @@ level.display();
 let gem = new Gem(getRandomNum(initPos.GEM_X), getRandomNum(initPos.GEM_Y));
 let rock = new Rock(initPos.ROCK_X, initPos.ROCK_Y);
 const popup = new Popup(popupContents.WELCOME);
+// Pass parameters for opacity, autoHide, freeze_listen
 popup.show(0.8, false, false);
 
 // Listen for key presses,

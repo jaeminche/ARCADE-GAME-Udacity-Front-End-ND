@@ -14,7 +14,7 @@ canvas {
 }
 
 /*logo*/
-#logo {
+.logo {
     background: url(../images/frogger-logo.png);
     background-repeat: no-repeat;
     background-position: center;
@@ -181,7 +181,7 @@ canvas {
         margin-top: -1em;
     }
 
-    #logo {
+    .logo {
         padding: 1.5em;
         background-size: 15em;
     }
@@ -224,7 +224,7 @@ canvas {
         height: 95%;
     }
 
-    #logo {
+    .logo {
         padding: 1.5em;
         background-size: 10em;
     }
@@ -260,7 +260,7 @@ canvas {
         margin: auto;
     }
 
-    #logo {
+    .logo {
         padding: 1.3em;
         background-size: 13em;
     }
@@ -315,7 +315,7 @@ canvas {
         margin: auto;
     }
 
-    #logo {
+    .logo {
         padding: 1em;
         background-size: 10em;
     }

@@ -126,10 +126,6 @@ canvas {
     height: 3.5em;
 }
 
-.flex-wrap {
-    justify-content: flex-wrap;
-}
-
 .rotate {
     transform: rotate(-45deg);
     transform-origin: 50% 50%;

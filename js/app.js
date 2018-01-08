@@ -114,10 +114,6 @@ Enemy.prototype.update = function(dt) {
     if (this.x > 800) {
         this.reposition(0);
     }
-    // Call enemy instance generation function, which
-    // will detect conditions under which another enemy instance gets generated,
-    // for instance : level-up followed by player's win
-    level.enemyGenerator();
 
     // Detect collision with player, and if collided,
     // subtract a gem from the gemPocket, and set the player at the default position
@@ -126,8 +122,8 @@ Enemy.prototype.update = function(dt) {
        player.y < this.y + 25 &&
        30 + player.y > this.y) {
         gemPocket--;
-        player.x = initPos.PLAYER_X;
-        player.y = initPos.PLAYER_Y;
+        player.reset();
+
         // if the player runs out of gems, she/he loses,
         // and show a gameover message pop-up
         if (gemPocket === -1) {
@@ -159,33 +155,6 @@ Player.prototype.constructor = Player;
  * Update player's position
  */
 Player.prototype.update = function() {
-    // If player wins(reaches the water):
-    if (this.y < 0) {
-        // Take instances of planted rocks out of allRocksTemp array(out of canvas),
-        for (let rock of allRocksTemp) {
-            if (rock.planted === true) {
-                let index = allRocksTemp.indexOf(rock);
-                allRocksTemp.splice(index, 1);
-            }
-        }
-
-        // Set the player on the default position, and set the level up
-        this.x = initPos.PLAYER_X;
-        this.y = initPos.PLAYER_Y;
-        level.up();
-        level.display();
-    }
-
-    // Set the player's move in the boundary of the canvas
-    if (this.y > 574) {
-        this.y -= 83;
-    }
-    if (this.x < 0) {
-        this.x += 101;
-    }
-    if (this.x > 707) {
-        this.x -= 101;
-    }
 };
 
 /**
@@ -215,6 +184,34 @@ Player.prototype.handleInput = function(pressedKey) {
         case 'enter':
             break;
     }
+
+    // If player wins(reaches the water):
+    if (this.y < 0) {
+        // Take instances of planted rocks out of allRocksTemp array(out of canvas),
+        for (let rock of allRocksTemp) {
+            if (rock.planted === true) {
+                let index = allRocksTemp.indexOf(rock);
+                allRocksTemp.splice(index, 1);
+            }
+        }
+
+        // Set the player on the default position, and set the level up
+        this.reset();
+        level.up();
+        level.display();
+    }
+
+    // Set the player's move in the boundary of the canvas
+    if (this.y > 574) {
+        this.y -= 83;
+    }
+    if (this.x < 0) {
+        this.x += 101;
+    }
+    if (this.x > 707) {
+        this.x -= 101;
+    }
+
     // If the player has more than one gem, pressing spacebar plants a rock instance
     if (pressedKey === 'spacebar' && gemPocket > 0) {
         allRocksTemp[gemPocket - 1].plant();
@@ -223,6 +220,11 @@ Player.prototype.handleInput = function(pressedKey) {
     if (popup.name != 'gameover') {
         $(".popup").css("opacity", 0);
     }
+};
+
+Player.prototype.reset = function() {
+    this.x = initPos.PLAYER_X;
+    this.y = initPos.PLAYER_Y;
 };
 
 /**
@@ -293,6 +295,8 @@ Rock.prototype.plant = function() {
     gemPocket--;
 };
 
+// TODO: The code below do not need to run every frame.
+//      Perhaps nested loops for both enemies and rocks being executed would be necessary?
 /**
  * Detect approach of entities, and make them get by it
  */
@@ -431,6 +435,12 @@ Level.prototype.up = function() {
             enemy.accelerate(40);
         }
     }
+
+    // Call enemy instance generation function, which
+    // will detect conditions under which another enemy instance gets generated,
+    // for instance : level-up followed by player's win
+    level.enemyGenerator();
+
     // Show a notification pop-up in accordance of level numbers
     switch (true) {
         case this.level % 5 == 0:
